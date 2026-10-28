@@ -49,8 +49,6 @@ app.*.map.json
 # Variáveis de ambiente (credenciais Supabase)
 .env
 
-# Arquivo de contexto do sistema (contém informações sensíveis)
-CONTEXT.md
 
 # Variáveis de ambiente injetadas no Flutter
 dart_defines.json
