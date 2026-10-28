@@ -11,8 +11,9 @@ import 'package:alinha_ja/core/theme_provider.dart';
 class BrandTheme {
   BrandTheme._();
 
-  /// Tom escuro da marca usado como container no tema padrão.
-  static const _containerMarca = Color(0xFFA51412);
+  /// Vermelho da marca AlinhaJá e o tom escuro que sempre o acompanhou.
+  static const _vermelhoDaMarca = Color(0xFFD21A18);
+  static const _containerDoVermelho = Color(0xFFA51412);
 
   static const _subTemasClaro = FlexSubThemesData(
     blendOnLevel: 10,
@@ -30,12 +31,17 @@ class BrandTheme {
     return hsl.withLightness((hsl.lightness + delta).clamp(0.0, 1.0)).toColor();
   }
 
+  /// Tom escuro de apoio (container) de uma cor primária. O vermelho da
+  /// marca mantém o tom de sempre; qualquer outra cor — da empresa ou de uma
+  /// distribuição com `BRAND_PRIMARY_COLOR` — recebe o tom derivado dela.
+  static Color containerDe(Color primaria) => primaria == _vermelhoDaMarca
+      ? _containerDoVermelho
+      : ajustarLuz(primaria, -0.10);
+
   /// Cores da marca/empresa para o esquema padrão.
   static FlexSchemeColor coresPadrao(OrgIdentity id, Brightness brilho) {
     final primaria = id.corPrimaria ?? AppConstants.primary;
-    final container = id.corPrimaria == null
-        ? _containerMarca
-        : ajustarLuz(primaria, -0.10);
+    final container = containerDe(primaria);
     final escuro = brilho == Brightness.dark;
     final secundaria =
         id.corSecundaria ?? (escuro ? const Color(0xFFFFFFFF) : const Color(0xFF000000));

@@ -79,6 +79,16 @@ void main() {
           const Color(0xFF1565C0));
     });
 
+    test('container acompanha a cor-base, inclusive a de outra marca', () {
+      expect(BrandTheme.containerDe(const Color(0xFFD21A18)),
+          const Color(0xFFA51412));
+      // Distribuição com BRAND_PRIMARY_COLOR azul: o container não pode
+      // continuar vermelho.
+      final azul = BrandTheme.containerDe(const Color(0xFF1565C0));
+      expect(HSLColor.fromColor(azul).hue,
+          closeTo(HSLColor.fromColor(const Color(0xFF1565C0)).hue, 1));
+    });
+
     test('cor clara recebe texto escuro por cima', () {
       const id = OrgIdentity(corPrimaria: Color(0xFFFFEB3B));
       final t = BrandTheme.claro(AppThemeScheme.alinha, id);
