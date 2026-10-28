@@ -1,0 +1,75 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+.firebase/
+supabase/.temp/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Variáveis de ambiente (credenciais Supabase)
+.env
+
+# Arquivo de contexto do sistema (contém informações sensíveis)
+CONTEXT.md
+
+# Variáveis de ambiente injetadas no Flutter
+dart_defines.json
+dart_defines.*.json
+
+# Node modules (Landing page e scripts)
+node_modules/
+landing-page/node_modules/
+
+# Chaves de assinatura do Android
+android/key.properties
+*.keystore
+*.jks
+
+# Arquivos de log e debug adicionais
+*.log
+flutter_*.log
+
+# Artefatos locais de seed com credenciais derivadas de CPF — nunca commitar
+supabase/scripts/missing*.sql
+supabase/scripts/extract_missing.py
+supabase/scripts/fix_missing.py

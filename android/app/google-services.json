@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "6609270866",
+    "project_id": "alinhaja",
+    "storage_bucket": "alinhaja.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:6609270866:android:6cf8358c8abbf74a90878b",
+        "android_client_info": {
+          "package_name": "com.alinha_ja.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQzRcubjFlTpsgn5YoVPK6T5jsM0ZyOyc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

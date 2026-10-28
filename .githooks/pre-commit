@@ -1,0 +1,28 @@
+#!/bin/sh
+# Bloqueia commits contendo segredos (JWTs Supabase, chaves privadas, service_role).
+# Ativado via: git config core.hooksPath .githooks
+
+STAGED=$(git diff --cached --name-only --diff-filter=ACM)
+[ -z "$STAGED" ] && exit 0
+
+FAIL=0
+for f in $STAGED; do
+  # ignora binários e lockfiles
+  case "$f" in
+    *.png|*.webp|*.jpg|*.ico|*.wasm|*.ttf|*.otf|*.zip|*.apk|*lock*) continue ;;
+  esac
+  MATCHES=$(git show ":$f" | grep -nE "eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{10,}|BEGIN (RSA |EC )?PRIVATE KEY|sb_secret_[A-Za-z0-9]" | head -3)
+  if [ -n "$MATCHES" ]; then
+    echo "BLOQUEADO: possível segredo em $f"
+    echo "$MATCHES" | cut -c1-120
+    FAIL=1
+  fi
+done
+
+if [ $FAIL -eq 1 ]; then
+  echo ""
+  echo "Commit abortado: remova o segredo e use variáveis de ambiente."
+  echo "(Para casos legítimos, use: git commit --no-verify)"
+  exit 1
+fi
+exit 0

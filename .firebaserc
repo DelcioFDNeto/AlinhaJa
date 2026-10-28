@@ -1,0 +1,24 @@
+{
+  "projects": {
+    "default": "alinhaja"
+  },
+  "targets": {
+    "alinhaja": {
+      "hosting": {
+        "app": [
+          "alinha-ja-app"
+        ],
+        "app-dev": [
+          "alinhajadev"
+        ],
+        "landing": [
+          "alinha-ja-landing"
+        ],
+        "admin": [
+          "alinha-ja-admin"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

@@ -1,0 +1,33 @@
+
+# Invocada pelo trigger do banco via net.http_post com x-webhook-secret
+# (não há JWT de usuário no webhook — a autenticação é o secret).
+[functions.rh-automations]
+enabled = true
+verify_jwt = false
+import_map = "./functions/rh-automations/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/rh-automations/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/rh-automations/*.html" ]
+
+# Chamadas pelos triggers do banco (net.http_post) com x-webhook-secret, sem
+# JWT de usuário. Com verify_jwt = true o gateway recusa (401) antes de a
+# função validar o secret — e `supabase functions deploy` sem esta seção
+# volta ao padrão true, derrubando as notificações. Todas são fail-closed
+# pelo WEBHOOK_SECRET no código.
+[functions.send-chat-notification]
+verify_jwt = false
+
+[functions.send-workflow-notification]
+verify_jwt = false
+
+[functions.send-module-notification]
+verify_jwt = false
+
+[functions.send-account-notification]
+verify_jwt = false
+
+[functions.send-call-notification]
+verify_jwt = false

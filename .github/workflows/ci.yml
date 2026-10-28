@@ -1,0 +1,50 @@
+# Verificações automáticas a cada push e pull request.
+#
+# Antes deste pipeline, nada barrava uma alteração quebrada: a geração de
+# questões por IA do RH ficou meses respondendo erro porque uma função
+# referenciava uma variável inexistente — o `deno check` abaixo acusa isso
+# na hora. A versão do Flutter é fixada aqui para bater com o pubspec.lock.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  app:
+    name: App (análise e testes)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.41.9
+          channel: stable
+          cache: true
+      - run: flutter pub get --enforce-lockfile
+      - run: flutter analyze
+      - run: flutter test
+
+  functions:
+    name: Edge Functions (tipos e testes)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      # --node-modules-dir=auto: o package.json da raiz (scripts Node) faria o
+      # Deno exigir um node_modules pronto para os imports `npm:`.
+      - run: deno check --node-modules-dir=auto supabase/functions/*/index.ts
+      - run: deno test --node-modules-dir=auto --allow-env supabase/functions/
+
+  marca:
+    name: Guarda de marca
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash scripts/check_brand.sh

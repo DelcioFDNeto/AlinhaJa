@@ -1,0 +1,237 @@
+/* Páginas legais — leitura longa, sem os efeitos da home. Densidade e
+   contraste vêm antes de qualquer floreio: é documento, não vitrine. */
+
+.legal {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.legal-top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem clamp(1rem, 4vw, 2.5rem);
+  border-bottom: 1px solid var(--line);
+  background: rgba(5, 5, 7, 0.86);
+  backdrop-filter: blur(14px);
+}
+
+.legal-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.86rem;
+  color: var(--text-dim);
+  transition: color 0.2s;
+}
+.legal-back:hover { color: var(--text); }
+
+.legal-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+}
+.legal-brand img { width: 24px; height: 24px; border-radius: 7px; object-fit: cover; }
+
+.legal-shell {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding: 2.5rem clamp(1rem, 4vw, 2.5rem) 4rem;
+}
+
+/* ---------- índice lateral ---------- */
+
+.legal-nav {
+  position: sticky;
+  top: 84px;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.legal-nav-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.legal-nav-item {
+  padding: 0.5rem 0.7rem;
+  border-radius: 10px;
+  text-align: left;
+  font-size: 0.86rem;
+  color: var(--text-dim);
+  transition: background 0.2s, color 0.2s;
+}
+.legal-nav-item:hover { background: var(--surface); color: var(--text); }
+.legal-nav-item.is-active {
+  background: var(--surface-hi);
+  color: var(--text);
+  font-weight: 600;
+  box-shadow: inset 2px 0 0 var(--primary);
+}
+
+/* ---------- corpo do documento ---------- */
+
+.legal-body {
+  min-width: 0;
+  font-size: 0.94rem;
+  line-height: 1.72;
+  color: var(--text-dim);
+}
+
+.legal-body h1 {
+  font-size: clamp(1.7rem, 3.6vw, 2.3rem);
+  color: var(--text);
+  margin-bottom: 0.4rem;
+}
+.legal-body h2 {
+  font-size: 1.25rem;
+  color: var(--text);
+  margin: 2.4rem 0 0.7rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--line-soft);
+}
+.legal-body h3 {
+  font-size: 1.02rem;
+  color: var(--text);
+  margin: 1.6rem 0 0.5rem;
+}
+
+.legal-body p { margin: 0.75rem 0; }
+.legal-body strong { color: var(--text); font-weight: 600; }
+
+.legal-body ul,
+.legal-body ol {
+  margin: 0.7rem 0 0.7rem 1.2rem;
+  padding-left: 0.6rem;
+}
+.legal-body ul { list-style: disc; }
+.legal-body ol { list-style: decimal; }
+.legal-body li { margin: 0.35rem 0; }
+.legal-body li::marker { color: var(--primary-soft); }
+
+.legal-body a {
+  color: var(--primary-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.legal-body a:hover { color: var(--text); }
+
+.legal-body blockquote {
+  margin: 1.2rem 0;
+  padding: 0.9rem 1.1rem;
+  border-left: 3px solid var(--primary);
+  border-radius: 0 12px 12px 0;
+  background: rgba(210, 26, 24, 0.08);
+  color: var(--text);
+}
+.legal-body blockquote p { margin: 0.3rem 0; }
+
+.legal-body hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid var(--line-soft);
+}
+
+.legal-body code {
+  padding: 0.12em 0.4em;
+  border-radius: 6px;
+  background: var(--surface-hi);
+  color: var(--text);
+  font-size: 0.86em;
+}
+.legal-body pre {
+  overflow-x: auto;
+  margin: 1rem 0;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg-alt);
+}
+.legal-body pre code { background: none; padding: 0; }
+
+/* Tabelas são metade destes documentos — precisam rolar sozinhas em vez de
+   estourar a largura da página no celular. */
+.legal-table-wrap {
+  overflow-x: auto;
+  margin: 1.1rem 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.legal-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.legal-body th,
+.legal-body td {
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line-soft);
+}
+.legal-body th {
+  color: var(--text);
+  font-weight: 600;
+  white-space: nowrap;
+  background: var(--surface);
+}
+.legal-body tbody tr:last-child td { border-bottom: 0; }
+
+.legal-body em { color: var(--text-faint); }
+
+/* Aviso de documento não personalizado — some sozinho quando o perfil legal
+   em legal-routes.ts é preenchido. */
+.legal-pending {
+  margin-bottom: 1.4rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(210, 26, 24, 0.4);
+  border-radius: 12px;
+  background: rgba(210, 26, 24, 0.1);
+  color: var(--text);
+  font-size: 0.86rem;
+}
+
+.legal-foot {
+  padding: 1.6rem clamp(1rem, 4vw, 2.5rem) 2.4rem;
+  border-top: 1px solid var(--line);
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-faint);
+}
+
+@media (max-width: 900px) {
+  .legal-shell { grid-template-columns: 1fr; padding-top: 1.5rem; }
+  .legal-nav {
+    position: static;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 0.4rem;
+    padding-bottom: 0.4rem;
+  }
+  .legal-nav-title { display: none; }
+  .legal-nav-item {
+    flex: 0 0 auto;
+    border: 1px solid var(--line);
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+  .legal-nav-item.is-active { box-shadow: none; border-color: var(--primary); }
+}

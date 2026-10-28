@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@supabase/supabase-js": "^2.110.2",
+    "firebase": "^12.10.0",
+    "pg": "^8.22.0"
+  },
+  "devDependencies": {
+    "supabase": "^2.87.0"
+  }
+}

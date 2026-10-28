@@ -1,0 +1,141 @@
+name: alinha_ja
+description: "AlinhaJá — Plataforma de comunicação e gestão operacional."
+publish_to: "none"
+version: 1.3.10+30092200
+
+environment:
+  sdk: ">=3.2.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_localizations:
+    sdk: flutter
+
+  # Backend — Auth, Database, Realtime, Storage
+  supabase_flutter: ^2.5.0
+
+  # Estado — Riverpod com code-gen simplificado
+  flutter_riverpod: ^2.5.1
+
+  # Navegação declarativa
+  go_router: ^13.2.0
+
+  # Mídia
+  image_picker: ^1.1.2
+  flutter_image_compress: ^2.3.0
+
+  # Exibição de imagens remotas com cache
+  cached_network_image: ^3.3.1
+  video_player: ^2.8.2
+  record: ^5.0.5
+  audioplayers: ^6.0.0
+
+  # Utilitários
+  uuid: ^4.4.0
+  timeago: ^3.7.0
+  path_provider: ^2.1.3
+  path: ^1.9.0
+  file_picker: ^8.0.0
+  url_launcher: ^6.2.5
+  intl: ^0.20.2
+
+  # UI
+  cupertino_icons: ^1.0.8
+  qr_flutter: ^4.1.0
+  fl_chart: ^0.69.0
+
+  # Variáveis de ambiente
+  flutter_dotenv: ^5.1.0
+  shared_preferences: ^2.5.4
+  shimmer: ^3.0.0
+  connectivity_plus: ^7.0.0
+  flex_color_scheme: ^8.4.0
+  firebase_core: ^4.5.0
+  firebase_messaging: ^16.1.2
+  emoji_picker_flutter: ^4.4.0
+  flutter_local_notifications: ^21.0.0
+  agora_rtc_engine: ^6.5.3
+  flutter_callkit_incoming: ^3.0.0
+  permission_handler: ^12.0.1
+  google_fonts: ^8.0.2
+  collection: ^1.19.1
+  http: ^1.2.0
+  archive: ^4.0.9
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  flutter_markdown: ^0.7.7+1
+  desktop_drop: ^0.7.0
+
+  # Rastreamento de Localização
+  geolocator: ^13.0.0
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  flutter_foreground_task: ^9.2.2
+  battery_plus: ^6.2.1
+  sensors_plus: ^6.1.1
+  swipe_to: ^1.0.6
+
+  # Web interop (substituto de dart:html)
+  web: ^1.1.0
+
+  # Cripto do backup (AES-256-GCM + PBKDF2). Puro Dart: mesma implementação
+  # em mobile, desktop e web, sem plugin nativo por plataforma.
+  pointycastle: ^4.0.0
+  crypto: ^3.0.3
+
+  # Keychain (iOS) / Keystore (Android) para a senha do backup automático.
+  # Só é usado quando o titular liga o automático — ver BackupKeyStore.
+  flutter_secure_storage: ^9.2.4
+
+  # Banco de Dados (Backup e Cache)
+  drift: ^2.22.0
+  sqlite3_flutter_libs: ^0.5.24
+  drift_flutter: ^0.2.0
+  lottie: ^3.3.3
+  device_info_plus: ^12.4.0
+
+  # Tour guiado / coach marks (introdução no primeiro login)
+  tutorial_coach_mark: ^1.2.13
+
+  # Grid de fotos recentes no menu de anexo (Android; sem suporte na Web)
+  photo_manager: ^3.10.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  change_app_package_name: ^1.5.0
+  flutter_launcher_icons: ^0.14.4
+  mocktail: ^1.0.3
+  drift_dev: ^2.22.0
+  build_runner: ^2.4.13
+
+flutter:
+  uses-material-design: true
+  assets:
+
+    - assets/images/
+    - assets/images/help/
+    - assets/images/help/shots/
+
+    # Pacote legal/LGPD. Os .md são a fonte da verdade e servem ao app e à
+    # landing page — declarar a pasta como asset evita manter uma cópia do
+    # texto em Dart, que divergiria na primeira revisão jurídica.
+    - docs/legal/
+
+dependency_overrides:
+  record_linux: ^1.0.0
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: false
+  image_path: "assets/images/logo.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/images/logo.png"
+  web:
+    generate: true
+    image_path: "assets/images/logo.png"
+    background_color: "#ffffff"
+    theme_color: "#1A73E8"

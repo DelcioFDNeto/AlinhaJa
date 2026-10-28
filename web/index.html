@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="AlinhaJá - Plataforma de Comunicação Corporativa">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="AlinhaJá">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>AlinhaJá</title>
+  <link rel="manifest" href="manifest.json">
+
+  <script>
+    // Limpeza programática de Service Workers antigos/conflitantes (como o antigo flutter_service_worker.js)
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        var cleared = false;
+        for (var i = 0; i < registrations.length; i++) {
+          var reg = registrations[i];
+          var activeWorker = reg.active || reg.installing || reg.waiting;
+          if (activeWorker && !activeWorker.scriptURL.includes('firebase-messaging-sw.js')) {
+            console.warn('[SW Cleanup] Unregistering stale service worker:', activeWorker.scriptURL);
+            reg.unregister();
+            cleared = true;
+          }
+        }
+        if (cleared) {
+          console.log('[SW Cleanup] Reloading page to apply clean state...');
+          if ('caches' in window) {
+            caches.keys().then(function(keys) {
+              keys.forEach(function(key) { caches.delete(key); });
+            });
+          }
+          setTimeout(function() {
+            window.location.reload();
+          }, 300);
+        }
+      });
+    }
+  </script>
+</head>
+<body>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-messaging-compat.js"></script>
+  <script src="notification-format.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyC7bvI3M84iM6prl4nVnZ2kENnwxWII7bg",
+      appId: "1:6609270866:web:5667fb8a6229676a90878b",
+      messagingSenderId: "6609270866",
+      projectId: "alinhaja"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    // Registra o Service Worker explicitamente para controle do FCM em background
+    if ('serviceWorker' in navigator) {
+      const messagingSwUrl = new URL('firebase-messaging-sw.js', document.baseURI);
+      navigator.serviceWorker.register(messagingSwUrl.pathname)
+        .then((registration) => {
+          console.log('[App] Service Worker registrado:', registration.scope);
+          // Força verificação imediata de nova versão do Service Worker no servidor
+          registration.update().catch(function() {});
+        })
+        .catch((err) => console.error('[App] Falha ao registrar SW:', err));
+
+      // Registro do SW que o Firebase usa para push (o SDK registra o mesmo
+      // script com escopo próprio).
+      function alinhajaMessagingRegistrations() {
+        return navigator.serviceWorker.getRegistrations().then(function (regs) {
+          return regs.filter(function (r) {
+            var w = r.active || r.waiting || r.installing;
+            return w && w.scriptURL.indexOf('firebase-messaging-sw.js') !== -1;
+          });
+        });
+      }
+
+      // App aberto mas sem foco: o FCM entrega à página, não ao SW. O Flutter
+      // chama esta função para exibir a notificação do sistema com o mesmo
+      // formato do SW. Retorna false se a janela está em foco.
+      window.alinhajaShowPushNotification = function (dataJson) {
+        try {
+          if (document.hasFocus()) return false;
+          if (!('Notification' in window) || Notification.permission !== 'granted') return false;
+          var data = JSON.parse(dataJson);
+          alinhajaMessagingRegistrations().then(function (regs) {
+            var reg = regs[0];
+            if (!reg) return;
+            var tag = AlinhaJaNotificationFormat.tagFor(data);
+            return reg.getNotifications({ tag: tag }).then(function (existing) {
+              var prev = existing.length && existing[0].data ? (existing[0].data.count || 1) : 0;
+              var view = AlinhaJaNotificationFormat.build(data, prev);
+              return reg.showNotification(view.title, view.options);
+            });
+          }).catch(function () {});
+          return true;
+        } catch (e) {
+          return false;
+        }
+      };
+
+      // Abrir a conversa fecha a notificação dela (como no WhatsApp Web).
+      function alinhajaCloseNotificationsForRoute() {
+        var m = window.location.hash.match(/^#\/(chat|channel)\/([^/?]+)/);
+        if (!m) return;
+        alinhajaMessagingRegistrations().then(function (regs) {
+          regs.forEach(function (r) {
+            r.getNotifications({ tag: m[2] }).then(function (list) {
+              list.forEach(function (n) { n.close(); });
+            });
+          });
+        }).catch(function () {});
+      }
+      window.addEventListener('hashchange', alinhajaCloseNotificationsForRoute);
+      window.addEventListener('focus', alinhajaCloseNotificationsForRoute);
+
+      // Listener para mensagens postMessage do SW (click na notificação)
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        if (event.data && event.data.type === 'NOTIFICATION_CLICK') {
+          const chatId = event.data.chatId;
+          const chatType = event.data.chatType;
+          var target = AlinhaJaNotificationFormat.pathFor(chatId, chatType, event.data.route);
+          // Mesma regra de rota do SW (notification-format.js).
+          if (target !== '/') {
+            window.location.hash = target.slice(1);
+          }
+        }
+      });
+    }
+  </script>
+
+  <!-- Loader Visível Enquanto Baixa CanvasKit -->
+  <style>
+    body { background-color: #000; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: white; }
+    .loader { border: 4px solid rgba(255,255,255,0.05); border-left-color: #EB1B1B; border-radius: 50%; width: 48px; height: 48px; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .loading-container { text-align: center; }
+    #flutter-bootstrap-loader {
+      position: absolute; top:0; left:0; width: 100vw; height: 100vh;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      background: #000; z-index: 10000; transition: opacity 0.5s ease-out;
+    }
+    h3 { margin: 0; font-weight: 600; letter-spacing: -0.5px; opacity: 0.8;}
+    p { margin-top: 8px; font-size: 14px; opacity: 0.5;}
+  </style>
+  <div id="flutter-bootstrap-loader">
+     <div class="loader"></div>
+     <h3>Iniciando Plataforma</h3>
+     <p>Carregando componentes corporativos...</p>
+  </div>
+
+  <script>
+    // A Flutter Engine esconde o loader automaticamente ao iniciar
+    window.addEventListener('flutter-first-frame', function() {
+      var loader = document.getElementById('flutter-bootstrap-loader');
+      if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => loader.remove(), 500);
+      }
+    });
+  </script>
+
+  <!-- Agora Web SDK (iris-web-rtc para chamadas de voz no PWA) -->
+  <script src="https://download.agora.io/sdk/release/iris-web-rtc_n450_w4220_0.8.6.js"></script>
+
+<script>
+    var script = document.createElement("script");
+    // Cache bust! Garante zero uso de cache web para o core do Flutter
+    // Adiciona timestamp real para forçar atualização sempre e não depender apenas do version.json
+    var timestamp = new Date().getTime();
+    var version = localStorage.getItem('appVersion') || '1.0.4';
+    script.src = "flutter_bootstrap.js?v=" + version + "&t=" + timestamp;
+    script.async = true;
+    document.body.appendChild(script);
+  </script>
+
+  <!-- Version Tracker -->
+  <div id="version-info" style="position:fixed;bottom:20px;left:20px;z-index:9999;font-size:10px;color:#666;display:none;">
+    v<span id="app-version">1.0.0</span>
+  </div>
+
+<script>
+    // Sistema de Cache Clearing - Garante versão mais recente
+    function clearFlutterCaches() {
+      if ('caches' in window) {
+        caches.keys().then(function(cacheNames) {
+          return Promise.all(
+            cacheNames.map(function(cacheName) {
+              if (cacheName.includes('flutter') || cacheName.includes('alinhaja') || cacheName.includes('AlinhaJa')) {
+                console.log('[Cache] Removendo:', cacheName);
+                return caches.delete(cacheName);
+              }
+            })
+          );
+        });
+      }
+    }
+
+    // Auto-Update: Verifica a cada 30 segundos por nova versão
+    var lastVersionCheck = 0;
+    function checkForUpdates() {
+      var now = Date.now();
+      if (now - lastVersionCheck > 30000) {
+        lastVersionCheck = now;
+        fetch('version.json?t=' + now, { cache: "no-store" }).then(function(response) {
+          if (response.ok) {
+            response.json().then(function(data) {
+              var storedVersion = localStorage.getItem('appVersion');
+              if (!storedVersion) {
+                // Primeira visita ou cache limpo: apenas registra a versão atual
+                if (data.version) localStorage.setItem('appVersion', data.version);
+              } else if (data.version && data.version !== storedVersion) {
+                // Nova versão detectada! Salva a nova, limpa o cache e recarrega a página forçadamente
+                localStorage.setItem('appVersion', data.version);
+                clearFlutterCaches();
+                window.location.reload(true);
+              }
+            });
+          }
+        }).catch(function() {});
+      }
+    }
+
+    // Executa verificação imediatamente no boot
+    checkForUpdates();
+    // E depois de 5s para garantia
+    setTimeout(checkForUpdates, 5000);
+  </script>
+
+
+</body>
+</html>

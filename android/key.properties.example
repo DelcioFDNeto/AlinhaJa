@@ -1,0 +1,4 @@
+storePassword=SUA_SENHA_AQUI
+keyPassword=SUA_SENHA_AQUI
+keyAlias=alinhaja
+storeFile=../keystore/alinhaja-release.jks
