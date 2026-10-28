@@ -75,8 +75,8 @@ Se você deseja explorar o código, siga o guia abaixo:
 
 ### 1. Clonando o repositório
 ```bash
-git clone https://github.com/SEU-USUARIO/AlinhaJá.git
-cd AlinhaJá
+git clone https://github.com/DelcioFDNeto/AlinhaJa.git
+cd AlinhaJa
 ```
 
 ### 2. Configurando as Variáveis de Ambiente
@@ -106,22 +106,23 @@ flutter run -d android --dart-define-from-file=dart_defines.json
 
 ## 🛡️ Medidas de Segurança para o GitHub
 
-Ao colocar este projeto no seu GitHub, certifique-se de:
 1. **Não commitar o arquivo `.env` nem o `dart_defines.json`.** (Eles já estão no `.gitignore` atualizado).
 2. **Remover arquivos nativos de assinatura** como o `android/key.properties` ou keystores (também protegidos no `.gitignore`).
+3. **Nunca versionar dados de clientes nem senhas:** planilhas de funcionários, CPFs, e-mails pessoais, senhas padrão ou strings de conexão com senha. Esses arquivos ficam em armazenamento seguro, fora do git. O teste `test/sem_contas_fixas_test.dart` falha no CI se algo assim entrar no produto.
+4. **Nenhuma conta nasce administradora.** O administrador principal de cada instalação é definido com `supabase/scripts/promover_super_admin.sql` (ver `docs/RUNBOOK-INSTALACAO-DUBAIRRO.md`, etapa 14).
 
 ---
 
-## 🔄 Diretrizes de Paridade com o Repositório Base (Fluxy)
+## 🔄 Relação com o Fluxy
 
-O **AlinhaJá** é o fork corporativo do Fluxy voltado para operações multi-tenant. Mantém paridade com o projeto-base em infraestrutura, bibliotecas Flutter, segurança do banco de dados (RLS, auditoria LGPD) e funcionalidades de mensageria.
+O **AlinhaJá** é o produto white-label e multiempresa, disponível para distribuição ou aquisição por outras empresas. O **Fluxy** é o produto exclusivo da Shineray by Sabel, com implantação, banco e marca próprios. Desde 28/10/2026 os dois vivem em repositórios independentes; este repositório começou com histórico limpo, sem dados de clientes.
 
-### ⚠️ Regras e Exceções Estritas de Paridade:
-- **Colaboradores e Seeds de Dados**: O AlinhaJá é uma plataforma **multi-tenant** (Rede DuBairro, etc.). Migrations e rotinas que manipulam base de colaboradores específicos de um cliente (como a migration `20260908150000_sync_and_clean_employees_mapping.sql` da Shineray By Sabel) são **estritamente exclusivas do Fluxy e NÃO devem ser portadas ou replicadas no AlinhaJá**.
-- **Blindagem de Marca**: Nomes, domínios, URLs de landing page e variáveis corporativas respeitam os assets e a identidade visual própria do AlinhaJá, validada pelo guard automatizado `scripts/check_brand.sh`.
+- **Não há paridade automática.** Um recurso só passa de um produto para o outro por decisão explícita.
+- **Componentes neutros** (envio de e-mail, helpers de HTML, push, CI e guarda de marca) são mantidos por cópia idêntica nos dois. Para conferir, com os dois repositórios clonados lado a lado: `bash scripts/comparar_componentes_comuns.sh ../Fluxy`.
+- **Blindagem de marca:** `scripts/check_brand.sh`, executado no CI, falha se nomes, domínios ou identidade do outro produto aparecerem no código.
 
 ---
 
 <p align="center">
   Construído com ❤️ e focado na produtividade corporativa.
-</p>
+</p>

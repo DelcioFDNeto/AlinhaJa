@@ -31,7 +31,7 @@ Todas as recomendações deste plano partem desta distinção:
 
 | # | Ponto de rigidez | Evidência no código | Efeito no negócio |
 | - | ---------------- | ------------------- | ----------------- |
-| 1 | **Duas linhas de código divergentes** (Fluxy e AlinhaJá) sincronizadas à mão | Branches `Fluxy`/`Fluxy-dev` e `Alinhaja`/`Alinhaja-dev` no mesmo repositório, com 113 e 50 commits exclusivos em cada linha de desenvolvimento; `scripts/check_brand.sh` existe só para impedir vazamento de marca entre elas; `CONTEXT.md` traz 52 menções a porte/paridade, inclusive uma diretiva proibindo portar uma migration específica (seção 31) | Cada recurso comum é feito duas vezes; defeitos viajam junto com os portes (o da geração de questões veio do commit `e02a399`, "port … from Fluxy", e está nas quatro branches); no modelo atual, cada empresa que distribuir o AlinhaJá com marca própria seria mais uma linha a sincronizar |
+| 1 | **Duas linhas de código divergentes** (Fluxy e AlinhaJá) sincronizadas à mão | Branches `Fluxy`/`Fluxy-dev` e `Alinhaja`/`Alinhaja-dev` no mesmo repositório, com 113 e 50 commits exclusivos em cada linha de desenvolvimento; `scripts/check_brand.sh` existe só para impedir vazamento de marca entre elas; `CONTEXT.md` traz 52 menções a porte/paridade, inclusive uma diretiva proibindo portar uma migration específica (seção 31) | Cada recurso comum é feito duas vezes; defeitos viajam junto com os portes (o da geração de questões veio do commit `e02a399`, "port … from Fluxy", e está nas quatro branches); no modelo atual, cada empresa que distribuir o AlinhaJá com marca própria seria mais uma linha a sincronizar. **Resolvido em 28/10/2026:** repositórios separados (Fase 1) |
 | 2 | **Servidor definido na compilação** | `AppEnv` lia apenas `--dart-define` e `.env` (`lib/core/config/app_env.dart`) | Instalação no servidor do cliente exigia uma build exclusiva; no celular, continua exigindo um APK por servidor |
 | 3 | **Marca e identidade em constantes** | `AppConstants.appName`, `companyName = 'DuBairro'` e `primary` em `lib/core/constants.dart`; 52 usos de `AppConstants.primary` e 935 de `Colors.*` na interface; apenas dois esquemas visuais fixos (`theme_provider.dart`) | Para um produto white-label, é o ponto comercial mais sensível: quem adquire ou distribui o AlinhaJá espera trocar nome, logo e cores sem desenvolvimento, e hoje cada marca exige alteração de código e nova build. A personalização por empresa prometida na documentação comercial também não é viável sem código. O Assistente IA dizia a funcionários de **qualquer** empresa que trabalhavam no DuBairro (corrigido nesta entrega) |
 | 4 | **Telas falando direto com o banco** | 93 arquivos chamam o Supabase diretamente, 43 deles telas (`ui/`); 519 chamadas a 94 tabelas e 120 funções; 30 arquivos com mais de 800 linhas (`workflow_main_view.dart` tem 2.535) | Alterar uma tabela obriga a caçar telas; testar uma tela exige um Supabase real; arquivos grandes concentram conflito de edição |
@@ -54,13 +54,13 @@ Todas as recomendações deste plano partem desta distinção:
 | ------ | ----------- | ------------------ |
 | **Implantação** (onde roda) | endereço do Supabase, chaves públicas, domínio do app, servidor de e-mail | `config.json` publicado junto do app Web; Secrets das Edge Functions |
 | **Empresa** (tenant) | nome, logo, cores, módulos, retenções, provedor de IA, SMTP próprio | tabela `organizations`, com campos tipados e editáveis no Console de Plataforma |
-| **Produto** (marca) | Fluxy (exclusivo da Shineray), AlinhaJá e a marca de cada empresa que distribuir o AlinhaJá: nome do app, ícone, identificador do pacote, domínios, recursos habilitados | perfil de marca escolhido na build (flavor) e na implantação, sobre **o mesmo núcleo de código** |
+| **Produto** (marca) | Fluxy (exclusivo da Shineray), AlinhaJá e a marca de cada empresa que distribuir o AlinhaJá: nome do app, ícone, identificador do pacote, domínios, recursos habilitados | Fluxy em repositório próprio; no AlinhaJá, perfil de marca escolhido na build (flavor) e na implantação, sobre **o mesmo código** |
 
 ---
 
 ## 3. Fase 0 — Executada nesta entrega
 
-As alterações foram feitas na linha do AlinhaJá. As branches do Fluxy não foram modificadas: o defeito da geração de questões (penúltima linha da tabela) também está nelas e precisa da mesma correção.
+As alterações foram feitas no AlinhaJá. Em 28/10/2026, as que valem para o Fluxy — geração de questões, módulo de e-mail, erros de tipo, senha da conta de sistema e CI — foram aplicadas também na `Fluxy-dev`.
 
 | Item | O que mudou | Onde |
 | ---- | ----------- | ---- |
@@ -73,6 +73,18 @@ As alterações foram feitas na linha do AlinhaJá. As branches do Fluxy não fo
 | **Pipeline de CI** | A cada push: análise e testes do app (Flutter fixado em 3.41.9, compatível com o `pubspec.lock`), checagem de tipos e testes das 12 Edge Functions, guarda de marca | `.github/workflows/ci.yml` |
 
 **Validação executada:** `flutter analyze` sem apontamentos no projeto inteiro; 401 testes do app aprovados (inclusive os novos de configuração); checagem de tipos das 12 Edge Functions sem erros (5 erros de tipo preexistentes corrigidos); 6 testes novos do módulo de e-mail aprovados; guarda de marca aprovada. O build Web de produção foi aberto no navegador em três cenários: com `config.json`, o app se conectou ao servidor indicado no arquivo; sem o arquivo (404) e com a resposta HTML que o Firebase Hosting devolve para rotas inexistentes, manteve o servidor do build. No GitHub, o CI passou nos três jobs (app, Edge Functions e guarda de marca).
+
+### Limpeza de segurança (28/10/2026)
+
+| Item | O que mudou |
+| ---- | ----------- |
+| **Conta mestre** | `handle_new_user()` promovia a super_admin ativo quem se cadastrasse com um e-mail fixo, em toda instalação e com cadastro aberto. A regra saiu (`20261028120000`); contas existentes não mudam. O primeiro administrador passa a ser definido na instalação por `supabase/scripts/promover_super_admin.sql`, com registro na auditoria |
+| **Conta de sistema** | Era semeada com senha escrita no código. O seed usa senha aleatória e `20261028120100` troca a original apenas se a conta ainda estiver bloqueada |
+| **Dados de outros clientes** | Saíram os seeds com nome, e-mail, cargo e senha padrão de funcionários da Shineray. Os scripts com dados pessoais de funcionários do DuBairro não vieram para este repositório |
+| **Script obsoleto** | `recover_user_data.sql` usava papéis inexistentes: se executado, derrubava todo cadastro |
+| **Credencial** | `run_seed.js` tinha a senha do banco DEV no código; agora lê `DATABASE_URL` |
+| **Estrutura herdada** | Migrations antigas semeiam filiais, cargos e canais da concessionária. O runbook remove esses registros logo após as migrations, antes de qualquer dado do cliente; a consolidação definitiva é a migration de base (Fase 4) |
+| **Repositório** | Este repositório começou com histórico limpo. `test/sem_contas_fixas_test.dart` impede a volta de contas fixas, senhas em código e dados da Shineray |
 
 ### Como usar a configuração em tempo de execução
 
@@ -97,25 +109,24 @@ Publicar, ao lado do `index.html` da implantação, um arquivo `config.json`:
 
 Tamanhos: **P** até 1 semana · **M** 2 a 4 semanas · **G** mais de um mês (uma pessoa). Cada fase entrega valor sozinha e pode ser interrompida sem deixar o sistema pela metade.
 
-### Fase 1 — Núcleo comum, produtos separados · M · maior retorno
+### Fase 1 — Dois repositórios independentes · executada em 28/10/2026
 
-O objetivo é parar de fazer duas vezes o que é comum aos dois produtos, **sem** aproximar o Fluxy do AlinhaJá em dados, implantação ou marca.
+Como o AlinhaJá pode ser distribuído ou vendido, o Fluxy não deve depender de código que possa mudar de dono. Os produtos ficam em repositórios separados:
 
-1. Criar um **perfil de produto** (`BrandProfile`: nome do app, empresa natal, modo de empresa única ou multiempresa, cores-base, ícones, domínios, identificador do pacote, módulos e recursos habilitados) selecionado na build por `--dart-define=BRAND=...` e por *flavors* do Android.
-2. Perfis iniciais: **`fluxy`** — empresa única (`isSingleTenant = true`), Shineray fixa, implantação própria — e **`alinhaja`** — multiempresa, white-label. Novos perfis para quem distribuir o AlinhaJá com marca própria (ver Fase 2).
-3. Substituir os usos de `AppConstants.appName`, `companyName`, `isSingleTenant` e dos domínios pelo perfil.
-4. Recursos desenvolvidos sob encomenda da Shineray ficam ligados apenas no perfil `fluxy`. Dados e migrations exclusivos da Shineray viram scripts da implantação do Fluxy e nunca entram no histórico comum.
-5. A guarda de marca passa a verificar que nomes de marca só aparecem nos perfis.
+| Produto | Repositório | Linhas |
+| ------- | ----------- | ------ |
+| **AlinhaJá** (white-label) | `DelcioFDNeto/AlinhaJa` | `main` |
+| **Fluxy** (exclusivo da Shineray) | `DelcioFDNeto/Fluxy` | `Fluxy` e `Fluxy-dev` |
 
-**O que não muda:** o Fluxy segue com Supabase, Firebase, domínios e banco próprios. A Shineray não se torna uma empresa dentro da nuvem AlinhaJá.
-
-**Confirmação necessária antes de começar:** o alcance da exclusividade da Shineray. Se ela cobre marca, dados e implantação (e, eventualmente, recursos feitos para a Shineray), o núcleo comum descrito acima a preserva. Se o contrato cobrir o próprio código-fonte, as duas linhas continuam separadas e apenas componentes neutros (envio de e-mail, CORS, configuração, CI) passam a ser compartilhados como pacote.
+1. **Sem paridade automática:** um recurso só passa de um produto para o outro por decisão explícita, o que preserva a exclusividade da Shineray.
+2. **Componentes neutros por cópia**, nunca por dependência: envio de e-mail, helpers de HTML, push, CI e guarda de marca. `scripts/comparar_componentes_comuns.sh` aponta qualquer divergência entre as cópias.
+3. **Pendências da separação:** arquivar as branches `Alinhaja` e `Alinhaja-dev` no repositório do Fluxy, que ainda guardam o histórico com dados de clientes; apontar implantação, CI e segredos do AlinhaJá para o repositório novo.
 
 ### Fase 2 — White-label de verdade no AlinhaJá · M
 
 O AlinhaJá precisa trocar de identidade em dois níveis, ambos sem desenvolvimento:
 
-- **Marca de distribuição** — para quem adquirir ou distribuir o produto: nome do app, ícone, domínios, nome nas lojas e nos e-mails. Resolvido com um perfil por distribuidor (Fase 1) e com `APP_NAME`, `APP_BASE_URL` e `LANDING_URL` por implantação, que as Edge Functions já leem dos Secrets.
+- **Marca de distribuição** — para quem adquirir ou distribuir o produto: nome do app, ícone, domínios, nome nas lojas e nos e-mails. Resolvido com um **perfil de marca** (`BrandProfile`: nome do app, cores-base, ícones, domínios, identificador do pacote) escolhido na build por `--dart-define=BRAND=...` e por *flavors* do Android, e com `APP_NAME`, `APP_BASE_URL` e `LANDING_URL` por implantação, que as Edge Functions já leem dos Secrets.
 - **Identidade da empresa cliente** — dentro de uma distribuição, cada empresa com seu logo e suas cores:
 
 1. Campos de identidade em `organizations` (a coluna `logo_url` já existe; acrescentar cor primária e secundária).
@@ -133,7 +144,7 @@ O AlinhaJá precisa trocar de identidade em dois níveis, ambos sem desenvolvime
 ### Fase 4 — Instalação e banco · M
 
 1. **Migration de base:** consolidar as 197 migrations em um esquema único para instalações novas (o histórico permanece para as existentes), conferido pelo `scripts/verify_migrations.js`.
-2. **Descoberta de servidor no celular:** no primeiro acesso, o aplicativo identifica a empresa (código ou domínio do e-mail) e obtém o endereço do servidor dela em um diretório central. Um único APK passa a atender a nuvem e os clientes com servidor próprio. Até lá, o perfil de marca da Fase 1 permite gerar o APK de um cliente a partir do mesmo código.
+2. **Descoberta de servidor no celular:** no primeiro acesso, o aplicativo identifica a empresa (código ou domínio do e-mail) e obtém o endereço do servidor dela em um diretório central. Um único APK passa a atender a nuvem e os clientes com servidor próprio. Até lá, o perfil de marca da Fase 2 permite gerar o APK de um cliente a partir do mesmo código.
 3. Roteiro de instalação automatizado a partir do runbook do DuBairro.
 
 ### Fase 5 — Fornecedores como adaptadores · M
@@ -159,8 +170,9 @@ O AlinhaJá precisa trocar de identidade em dois níveis, ambos sem desenvolvime
 
 | Decisão | Opções | Recomendação |
 | ------- | ------ | ------------ |
-| Alcance da exclusividade do Fluxy | (a) marca, dados e implantação; (b) também os recursos feitos para a Shineray; (c) também o código-fonte | (a) ou (b): núcleo comum com perfis separados. (c): linhas separadas, compartilhando só componentes neutros |
+| Branches antigas do AlinhaJá no repositório do Fluxy | Arquivar (apagar depois de confirmar que nada as usa) ou manter | Arquivar: guardam o histórico com dados de clientes e duplicam este repositório |
+| Dados pessoais fora do git | Armazenamento seguro para as planilhas de funcionários usadas nas importações | Definir antes da carga dos 187 usuários do DuBairro |
 | Vídeo em grupo | Servidor MiroTalk próprio ou padronizar no Agora | Avaliar custo do Agora para reuniões; sem isso, servidor próprio |
-| Ordem das fases | 1 → 2 → 4 → 3 → 5 (sugerida) | Fase 1 primeiro: elimina o retrabalho de portes. Fase 2 logo depois: é o que torna o AlinhaJá vendável como white-label sem desenvolvimento por cliente |
+| Ordem das próximas fases | 2 → 4 → 3 → 5 (sugerida) | Fase 2 primeiro: é o que torna o AlinhaJá vendável como white-label sem desenvolvimento por cliente |
 
 *AlinhaJá — Plano de Evolução da Arquitetura. Documento interno da equipe técnica.*
