@@ -120,7 +120,8 @@ Como o AlinhaJá pode ser distribuído ou vendido, o Fluxy não deve depender de
 
 1. **Sem paridade automática:** um recurso só passa de um produto para o outro por decisão explícita, o que preserva a exclusividade da Shineray.
 2. **Componentes neutros por cópia**, nunca por dependência: envio de e-mail, helpers de HTML, push, CI e guarda de marca. `scripts/comparar_componentes_comuns.sh` aponta qualquer divergência entre as cópias.
-3. **Pendências da separação:** arquivar as branches `Alinhaja` e `Alinhaja-dev` no repositório do Fluxy, que ainda guardam o histórico com dados de clientes; apontar implantação, CI e segredos do AlinhaJá para o repositório novo.
+3. **Branches antigas:** `Alinhaja` e `Alinhaja-dev` foram arquivadas no repositório do Fluxy como `backup/alinhaja-20261028` e `backup/alinhaja-dev-20261028` (mesmos commits). Falta apagar as originais.
+4. **Pendência da separação:** apontar implantação, CI e segredos do AlinhaJá para o repositório novo.
 
 ### Fase 2 — White-label de verdade no AlinhaJá · M
 
@@ -170,7 +171,6 @@ O AlinhaJá precisa trocar de identidade em dois níveis, ambos sem desenvolvime
 
 | Decisão | Opções | Recomendação |
 | ------- | ------ | ------------ |
-| Branches antigas do AlinhaJá no repositório do Fluxy | Arquivar (apagar depois de confirmar que nada as usa) ou manter | Arquivar: guardam o histórico com dados de clientes e duplicam este repositório |
 | Dados pessoais fora do git | Armazenamento seguro para as planilhas de funcionários usadas nas importações | Definir antes da carga dos 187 usuários do DuBairro |
 | Vídeo em grupo | Servidor MiroTalk próprio ou padronizar no Agora | Avaliar custo do Agora para reuniões; sem isso, servidor próprio |
 | Ordem das próximas fases | 2 → 4 → 3 → 5 (sugerida) | Fase 2 primeiro: é o que torna o AlinhaJá vendável como white-label sem desenvolvimento por cliente |
