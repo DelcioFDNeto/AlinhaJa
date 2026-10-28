@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../../core/constants.dart';
 import '../providers/two_factor_provider.dart';
 import '../services/device_fingerprint_service.dart';
+import 'package:alinha_ja/core/brand/org_identity.dart';
 
 class TrustedDevicesScreen extends ConsumerStatefulWidget {
   const TrustedDevicesScreen({super.key});
@@ -229,7 +230,7 @@ class _TrustedDevicesScreenState extends ConsumerState<TrustedDevicesScreen> {
         ),
       ),
       body: RefreshIndicator(
-        color: AppConstants.primary,
+        color: context.corMarca,
         onRefresh: () async {
           ref.invalidate(trustedDevicesProvider);
         },
@@ -305,10 +306,10 @@ class _TrustedDevicesScreenState extends ConsumerState<TrustedDevicesScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppConstants.primary.withValues(alpha: 0.08),
+        color: context.corMarca.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppConstants.primary.withValues(alpha: 0.2),
+          color: context.corMarca.withValues(alpha: 0.2),
         ),
       ),
       child: Row(
@@ -317,13 +318,13 @@ class _TrustedDevicesScreenState extends ConsumerState<TrustedDevicesScreen> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: AppConstants.primary.withValues(alpha: 0.15),
+              color: context.corMarca.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.info_outline_rounded,
               size: 20,
-              color: AppConstants.primary,
+              color: context.corMarca,
             ),
           ),
           const SizedBox(width: 12),
@@ -375,7 +376,7 @@ class _TrustedDevicesScreenState extends ConsumerState<TrustedDevicesScreen> {
         borderRadius: BorderRadius.circular(16),
         border: isCurrent
             ? Border.all(
-                color: AppConstants.primary.withValues(alpha: 0.4),
+                color: context.corMarca.withValues(alpha: 0.4),
                 width: 1.5,
               )
             : null,
@@ -387,7 +388,7 @@ class _TrustedDevicesScreenState extends ConsumerState<TrustedDevicesScreen> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: (isActive ? AppConstants.primary : AppConstants.secondaryText)
+              color: (isActive ? context.corMarca : AppConstants.secondaryText)
                   .withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(10),
             ),
@@ -395,7 +396,7 @@ class _TrustedDevicesScreenState extends ConsumerState<TrustedDevicesScreen> {
               _getDeviceIcon(deviceName),
               size: 24,
               color: isActive
-                  ? AppConstants.primary
+                  ? context.corMarca
                   : AppConstants.secondaryText,
             ),
           ),
@@ -428,7 +429,7 @@ class _TrustedDevicesScreenState extends ConsumerState<TrustedDevicesScreen> {
                         ),
                         decoration: BoxDecoration(
                           color:
-                              AppConstants.primary.withValues(alpha: 0.15),
+                              context.corMarca.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
@@ -436,7 +437,7 @@ class _TrustedDevicesScreenState extends ConsumerState<TrustedDevicesScreen> {
                           style: GoogleFonts.inter(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
-                            color: AppConstants.primary,
+                            color: context.corMarca,
                           ),
                         ),
                       ),

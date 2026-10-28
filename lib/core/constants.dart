@@ -14,7 +14,18 @@ class AppConstants {
   /// `scripts/check_brand.sh` falha se a marca do outro fork aparecer no
   /// código — foi um literal esquecido que fez o bot do AlinhaJá dizer a
   /// colaborador do DuBairro que ele trabalhava na Shineray.
-  static const appName = 'AlinhaJá';
+  ///
+  /// White-label: quem distribui o produto com marca própria troca o nome
+  /// na build, sem editar código — `--dart-define=BRAND_NAME=MarcaX`
+  /// (ver `docs/GUIA-MARCA-DISTRIBUIDOR.md`).
+  static const appName =
+      String.fromEnvironment('BRAND_NAME', defaultValue: 'AlinhaJá');
+
+  /// Nome com que os textos-fonte foram escritos (documentos legais em
+  /// `docs/legal/`, aprovados como estão). Na exibição, ele é trocado por
+  /// [appName] — numa distribuição com outra marca, o documento mostra a
+  /// marca dela sem que o texto aprovado seja editado.
+  static const nomeOriginalDoProduto = 'AlinhaJá';
 
   /// Empresa dona deste deployment. Separada de [appName] de propósito: o
   /// app é o produto, a empresa é o cliente, e os dois divergem entre forks.
@@ -39,7 +50,12 @@ class AppConstants {
   static const isSingleTenant = false;
 
   // Cores institucionais
-  static const primary = Color(0xFFD21A18); // Primary Red
+  /// Cor-base da marca. Distribuidor troca na build com
+  /// `--dart-define=BRAND_PRIMARY_COLOR=0xFFRRGGBB`. Cada empresa ainda pode
+  /// ter a própria cor (OrgIdentity), que prevalece em tempo de execução —
+  /// por isso as telas usam a cor do tema (`context.corMarca`), não esta.
+  static const primary =
+      Color(int.fromEnvironment('BRAND_PRIMARY_COLOR', defaultValue: 0xFFD21A18));
   static const success = Color(0xFF34C759);
   static const danger = Color(0xFFFF3B30);
 

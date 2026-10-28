@@ -113,6 +113,14 @@ flutter run -d android --dart-define-from-file=dart_defines.json
 
 ---
 
+## 🎨 Marca e Identidade Visual (white-label)
+
+- **Marca do produto:** quem distribui o AlinhaJá com marca própria troca nome e cor-base na build (`--dart-define=BRAND_NAME` e `BRAND_PRIMARY_COLOR`) e aplica o restante com `scripts/aplicar_marca.sh`.
+- **Identidade da empresa:** cada empresa cliente define logo e cores em **Painel Administrativo → Identidade Visual**, sem nova build.
+- Passo a passo: `docs/GUIA-MARCA-DISTRIBUIDOR.md`.
+
+---
+
 ## 🔄 Relação com o Fluxy
 
 O **AlinhaJá** é o produto white-label e multiempresa, disponível para distribuição ou aquisição por outras empresas. O **Fluxy** é o produto exclusivo da Shineray by Sabel, com implantação, banco e marca próprios. Desde 28/10/2026 os dois vivem em repositórios independentes; este repositório começou com histórico limpo, sem dados de clientes.

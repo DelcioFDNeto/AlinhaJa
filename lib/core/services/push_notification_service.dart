@@ -24,6 +24,7 @@ import 'package:alinha_ja/core/services/notifications/chat_notification_renderer
 import 'package:alinha_ja/core/services/notifications/notification_action_bridge.dart';
 import 'package:alinha_ja/core/services/notifications/notification_actions_gateway.dart';
 import 'package:alinha_ja/core/constants.dart';
+import 'package:alinha_ja/core/brand/org_identity.dart';
 import 'package:alinha_ja/core/services/call_service_callkit_stub.dart'
     if (dart.library.io) 'package:alinha_ja/core/services/call_service_callkit_native.dart'
     as callkit;
@@ -1261,7 +1262,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           importance: spec.importance,
           priority: Priority.high,
           icon: '@drawable/ic_notification',
-          color: AppConstants.primary,
+          color: OrgIdentity.corAtual,
         ),
       ),
       payload: 'module:$moduleId',

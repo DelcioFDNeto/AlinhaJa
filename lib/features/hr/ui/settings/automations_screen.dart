@@ -8,6 +8,7 @@ import 'package:alinha_ja/features/hr/models/email_template.dart';
 import 'package:alinha_ja/features/hr/models/automation_rule.dart';
 import 'package:alinha_ja/core/rbac/providers/rbac_provider.dart';
 import 'package:alinha_ja/core/utils/friendly_error.dart';
+import 'package:alinha_ja/core/constants.dart';
 
 class AutomationsScreen extends ConsumerStatefulWidget {
   const AutomationsScreen({super.key});
@@ -310,7 +311,7 @@ class _SmtpTabState extends ConsumerState<_SmtpTab> {
             const SizedBox(height: 16),
             TextFormField(
               controller: _fromNameCtrl,
-              decoration: const InputDecoration(labelText: 'Nome do Remetente (ex: RH AlinhaJá)', border: OutlineInputBorder()),
+              decoration: const InputDecoration(labelText: 'Nome do Remetente (ex: RH ${AppConstants.appName})', border: OutlineInputBorder()),
               validator: (v) => v!.isEmpty ? 'Obrigatório' : null,
             ),
             const SizedBox(height: 16),

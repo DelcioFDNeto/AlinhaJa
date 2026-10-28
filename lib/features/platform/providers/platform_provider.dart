@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:alinha_ja/core/supabase_client.dart';
+import 'package:alinha_ja/core/models/org_settings.dart';
 
 /// Uma empresa (tenant) na visão do dono da aplicação.
 /// Espelha o retorno de `platform_list_organizations()`.
@@ -42,11 +43,7 @@ class PlatformOrganization {
 
   /// IDs dos módulos licenciáveis contratados por esta empresa, lidos de
   /// `settings.modules`. Vazio quando ainda não configurado.
-  Set<String> get enabledModuleIds {
-    final mods = settings['modules'];
-    if (mods is List) return mods.map((e) => e.toString()).toSet();
-    return const {};
-  }
+  Set<String> get enabledModuleIds => OrgSettings(settings).modulos;
 }
 
 /// Repositório das operações de plataforma (todas guardadas por

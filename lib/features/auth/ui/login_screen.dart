@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:alinha_ja/core/globals.dart';
 import '../services/mfa_service.dart';
 import '../services/two_factor_service.dart';
+import 'package:alinha_ja/core/brand/org_identity.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -192,7 +193,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color:
-                                  AppConstants.primary.withValues(alpha: 0.15),
+                                  context.corMarca.withValues(alpha: 0.15),
                             ),
                           ),
                         ),
@@ -204,7 +205,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             height: 600,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: const Color(0xFFA51412)
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .primaryContainer
                                   .withValues(alpha: 0.2),
                             ),
                           ),
@@ -557,7 +560,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 SnackBar(
                                   content: Text(
                                       'Um link de redefinição foi enviado para $email.'),
-                                  backgroundColor: AppConstants.primary,
+                                  backgroundColor: context.corMarca,
                                 ),
                               );
                             }

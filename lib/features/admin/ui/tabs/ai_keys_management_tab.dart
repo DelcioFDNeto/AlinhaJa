@@ -40,7 +40,7 @@ const List<_Provider> _providers = [
     steps: [
       'Acesse o console da Anthropic e faça login (ou crie uma conta corporativa).',
       'Em "Billing", adicione um método de pagamento e créditos — a API Claude é pré-paga por uso. Atenção: a assinatura Claude Pro/Max NÃO cobre a API; o faturamento é separado.',
-      'Abra "API Keys" e clique em "Create Key". Dê um nome (ex.: "AlinhaJá RH").',
+      'Abra "API Keys" e clique em "Create Key". Dê um nome (ex.: "${AppConstants.appName} RH").',
       'Copie a chave gerada (sk-ant-...). Ela só é exibida UMA vez pelo console.',
       'Cole a chave no campo abaixo e salve.',
     ],
@@ -55,7 +55,7 @@ const List<_Provider> _providers = [
     steps: [
       'Acesse platform.openai.com e faça login (ou crie uma conta).',
       'Em "Billing", adicione um método de pagamento e créditos — a API é paga por uso e é separada da assinatura ChatGPT Plus.',
-      'Abra "API keys" e clique em "Create new secret key". Dê um nome (ex.: "AlinhaJá RH").',
+      'Abra "API keys" e clique em "Create new secret key". Dê um nome (ex.: "${AppConstants.appName} RH").',
       'Copie a chave gerada (sk-...). Ela só é exibida UMA vez.',
       'Cole a chave no campo abaixo e salve.',
     ],
@@ -84,7 +84,7 @@ const List<_Provider> _providers = [
     consoleUrl: 'https://console.groq.com/keys',
     steps: [
       'Acesse console.groq.com e faça login (ou crie uma conta).',
-      'Abra "API Keys" e clique em "Create API Key". Dê um nome (ex.: "AlinhaJá RH").',
+      'Abra "API Keys" e clique em "Create API Key". Dê um nome (ex.: "${AppConstants.appName} RH").',
       'Copie a chave gerada (gsk_...). Ela só é exibida UMA vez.',
       'O Groq tem um tier gratuito generoso (ideal para extração ultrarrápida); há faturamento por uso apenas acima da cota.',
       'Cole a chave no campo abaixo e salve.',

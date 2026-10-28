@@ -8,9 +8,9 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'core/router.dart';
 import 'core/theme_provider.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:alinha_ja/core/constants.dart';
-import 'package:alinha_ja/core/status_tokens.dart';
+import 'package:alinha_ja/core/brand/brand_theme.dart';
+import 'package:alinha_ja/core/brand/org_identity.dart';
 import 'package:alinha_ja/core/config/app_env.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/globals.dart';
@@ -27,114 +27,13 @@ import 'package:alinha_ja/core/modules/module_access_provider.dart';
 class AppRoot extends ConsumerWidget {
   const AppRoot({super.key});
 
-  ThemeData _buildLightTheme(AppThemeScheme scheme) {
-    if (scheme == AppThemeScheme.whatsapp) {
-      return FlexThemeData.light(
-        colors: const FlexSchemeColor(
-          primary: Color(0xFF075E54),
-          primaryContainer: Color(0xFF128C7E),
-          secondary: Color(0xFF25D366),
-          secondaryContainer: Color(0xFF1D9344),
-        ),
-        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-        blendLevel: 4,
-        subThemesData: const FlexSubThemesData(
-          blendOnLevel: 10,
-          blendOnColors: false,
-          useMaterial3Typography: true,
-          useM2StyleDividerInM3: true,
-          inputDecoratorRadius: 14,
-          inputDecoratorBorderType: FlexInputBorderType.outline,
-          inputDecoratorUnfocusedHasBorder: false,
-        ),
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
-        extensions: const [AlinhaStatusTokens.standard],
-      );
-    }
-
-    // Default: tema da marca desta build
-    return FlexThemeData.light(
-      colors: const FlexSchemeColor(
-        primary: AppConstants.primary,
-        primaryContainer: Color(0xFFA51412),
-        secondary: Color(0xFF000000), // Preto
-        secondaryContainer: Color(0xFF333333),
-      ),
-      surfaceMode: FlexSurfaceMode.highSurfaceLowScaffold,
-      blendLevel: 2, // Quase neutro/branco
-      subThemesData: const FlexSubThemesData(
-        blendOnLevel: 10,
-        blendOnColors: false,
-        useMaterial3Typography: true,
-        useM2StyleDividerInM3: true,
-        inputDecoratorRadius: 14,
-        inputDecoratorBorderType: FlexInputBorderType.outline,
-        inputDecoratorUnfocusedHasBorder: false,
-      ),
-      visualDensity: FlexColorScheme.comfortablePlatformDensity,
-      useMaterial3: true,
-      extensions: const [AlinhaStatusTokens.standard],
-    );
-  }
-
-  ThemeData _buildDarkTheme(AppThemeScheme scheme) {
-    if (scheme == AppThemeScheme.whatsapp) {
-      return FlexThemeData.dark(
-        colors: const FlexSchemeColor(
-          primary: Color(0xFF00A884),
-          primaryContainer: Color(0xFF008969),
-          secondary: Color(0xFF25D366),
-          secondaryContainer: Color(0xFF1D9344),
-        ),
-        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-        blendLevel: 2,
-        scaffoldBackground: const Color(0xFF111B21), // Zap Dark background
-        surface: const Color(0xFF1F2C34), // Zap Dark cards
-        subThemesData: const FlexSubThemesData(
-          blendOnLevel: 20,
-          useMaterial3Typography: true,
-          useM2StyleDividerInM3: true,
-          inputDecoratorRadius: 14,
-          inputDecoratorBorderType: FlexInputBorderType.outline,
-          inputDecoratorUnfocusedHasBorder: false,
-        ),
-        visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        useMaterial3: true,
-        extensions: const [AlinhaStatusTokens.standard],
-      );
-    }
-
-    // Default: tema escuro da marca desta build
-    return FlexThemeData.dark(
-      colors: const FlexSchemeColor(
-        primary: AppConstants.primary,
-        primaryContainer: Color(0xFFA51412),
-        secondary: Color(0xFFFFFFFF),
-        secondaryContainer: Color(0xFFE0E0E0),
-      ),
-      surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-      blendLevel: 0,
-      scaffoldBackground: const Color(0xFF000000), // Preto total no fundo
-      surface: const Color(0xFF1F2124), // Cinza escuro/Shark
-      subThemesData: const FlexSubThemesData(
-        blendOnLevel: 10,
-        useMaterial3Typography: true,
-        useM2StyleDividerInM3: true,
-        inputDecoratorRadius: 14,
-        inputDecoratorBorderType: FlexInputBorderType.outline,
-        inputDecoratorUnfocusedHasBorder: false,
-      ),
-      visualDensity: FlexColorScheme.comfortablePlatformDensity,
-      useMaterial3: true,
-      extensions: const [AlinhaStatusTokens.standard],
-    );
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
     final themeSettings = ref.watch(themeSettingsProvider);
+    // Identidade da empresa (logo e cores): troca o tema sem nova build.
+    final identidade =
+        ref.watch(orgIdentityProvider).value ?? OrgIdentity.vazia;
 
     return _PushNotificationInitializer(
       child: MaterialApp.router(
@@ -212,8 +111,8 @@ class AppRoot extends ConsumerWidget {
         },
         routerConfig: router,
         themeMode: themeSettings.mode,
-        theme: _buildLightTheme(themeSettings.scheme),
-        darkTheme: _buildDarkTheme(themeSettings.scheme),
+        theme: BrandTheme.claro(themeSettings.scheme, identidade),
+        darkTheme: BrandTheme.escuro(themeSettings.scheme, identidade),
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
@@ -338,7 +237,7 @@ class _PushNotificationInitializerState
             'Nova versão do aplicativo disponível! Recarregue a página.'),
         duration: const Duration(days: 365), // Mantém fixo na tela
         behavior: SnackBarBehavior.floating,
-        backgroundColor: AppConstants.primary,
+        backgroundColor: context.corMarca,
         action: SnackBarAction(
           label: 'OK',
           textColor: Colors.white,

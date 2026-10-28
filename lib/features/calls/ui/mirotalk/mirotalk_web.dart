@@ -55,7 +55,7 @@ class _MiroTalkEntryScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Reunião AlinhaJá'),
+        title: const Text('Reunião ${AppConstants.appName}'),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
         leading: IconButton(

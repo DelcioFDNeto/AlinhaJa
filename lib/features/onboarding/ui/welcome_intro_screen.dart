@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:alinha_ja/core/constants.dart';
 
 /// Slide de conteúdo da introdução.
 class _IntroSlide {
@@ -45,7 +46,7 @@ class _WelcomeIntroScreenState extends State<WelcomeIntroScreen> {
   static const _slides = <_IntroSlide>[
     _IntroSlide(
       showLogo: true,
-      title: 'Bem-vindo ao AlinhaJá',
+      title: 'Bem-vindo ao ${AppConstants.appName}',
       subtitle:
           'A plataforma de comunicação e gestão operacional da sua empresa, '
           'reunida em um só lugar.',

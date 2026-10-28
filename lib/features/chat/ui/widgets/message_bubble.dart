@@ -24,6 +24,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:alinha_ja/core/services/call_service.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:video_player/video_player.dart';
+import 'package:alinha_ja/core/brand/org_identity.dart';
 
 /// Balão de mensagem que adapta sua exibição ao [ContentType]:
 /// - **text** — texto simples
@@ -614,7 +615,7 @@ class MessageBubble extends StatelessWidget {
               icon: const Icon(Icons.verified_user_outlined, size: 16),
               label: const Text('Estou Ciente'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppConstants.primary,
+                backgroundColor: context.corMarca,
                 foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 visualDensity: VisualDensity.compact,
                 padding: const EdgeInsets.symmetric(horizontal: 12),

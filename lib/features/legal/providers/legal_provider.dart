@@ -52,7 +52,9 @@ final orgLegalProfileProvider = FutureProvider<OrgLegalProfile>((ref) async {
 final legalDocumentTextProvider =
     FutureProvider.family<String, String>((ref, docId) async {
   final repo = ref.watch(legalRepositoryProvider);
-  final bruto = await repo.loadDocumentText(docId);
+  // Nome do produto conforme a marca desta build (white-label).
+  final bruto = (await repo.loadDocumentText(docId))
+      .replaceAll(AppConstants.nomeOriginalDoProduto, AppConstants.appName);
 
   // Perfil indisponível não pode tirar o documento do ar: o titular tem direito
   // de ler o texto, e sem os dados ele aparece com os colchetes — degradação

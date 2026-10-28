@@ -19,6 +19,7 @@ import 'package:alinha_ja/features/platform/ui/platform_console_screen.dart';
 import 'package:alinha_ja/features/chats/ui/chats_list_screen.dart';
 import 'package:alinha_ja/features/chats/models/chat_model.dart';
 import 'package:alinha_ja/features/onboarding/onboarding_keys.dart';
+import 'package:alinha_ja/core/constants.dart';
 
 class _SearchIntent extends Intent {
   const _SearchIntent();
@@ -394,7 +395,7 @@ class _DesktopPlaceholder extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'AlinhaJá para Desktop',
+              '${AppConstants.appName} para Desktop',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w700,

@@ -12,6 +12,7 @@ import 'package:alinha_ja/core/constants.dart';
 import 'package:alinha_ja/core/services/notifications/notification_action_bridge.dart';
 import 'package:alinha_ja/core/services/notifications/notification_actions_gateway.dart';
 import 'package:alinha_ja/core/services/notifications/notification_store.dart';
+import 'package:alinha_ja/core/brand/org_identity.dart';
 
 const kMessagesGroupKey = 'alinhaja_unified_messages';
 final int kSummaryNotificationId =
@@ -228,7 +229,7 @@ class ChatNotificationRenderer {
         messages: messages,
       ),
       groupKey: kMessagesGroupKey,
-      color: AppConstants.primary,
+      color: OrgIdentity.corAtual,
       icon: '@drawable/ic_notification',
       largeIcon: dmAvatar == null ? null : ByteArrayAndroidBitmap(dmAvatar),
       number: unread,
@@ -299,7 +300,7 @@ class ChatNotificationRenderer {
           // Só a conversa toca; o resumo apenas se atualiza.
           groupAlertBehavior: GroupAlertBehavior.children,
           onlyAlertOnce: true,
-          color: AppConstants.primary,
+          color: OrgIdentity.corAtual,
           icon: '@drawable/ic_notification',
           styleInformation: InboxStyleInformation(
             digests.take(5).map(digestLine).toList(),
@@ -331,7 +332,7 @@ class ChatNotificationRenderer {
           channel.name,
           importance: Importance.high,
           priority: Priority.high,
-          color: AppConstants.primary,
+          color: OrgIdentity.corAtual,
           icon: '@drawable/ic_notification',
           styleInformation: BigTextStyleInformation(body),
         ),

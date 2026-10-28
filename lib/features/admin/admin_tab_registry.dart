@@ -10,6 +10,7 @@ import 'package:alinha_ja/features/location/ui/location_dashboard_screen.dart';
 import 'package:alinha_ja/features/admin/ui/tabs/backup_management_tab.dart';
 import 'package:alinha_ja/features/admin/ui/tabs/ai_keys_management_tab.dart';
 import 'package:alinha_ja/features/admin/ui/tabs/legal_profile_tab.dart';
+import 'package:alinha_ja/features/admin/ui/tabs/identidade_visual_tab.dart';
 import 'package:alinha_ja/core/rbac/ui/access_management_screen.dart';
 
 /// Descreve uma aba do Dashboard Administrativo.
@@ -119,6 +120,12 @@ const List<AdminTabDescriptor> kAdminTabRegistry = <AdminTabDescriptor>[
     title: 'Dados Legais',
     builder: _legalProfile,
   ),
+  AdminTabDescriptor(
+    module: 'admin_identidade',
+    icon: Icons.palette_outlined,
+    title: 'Identidade Visual',
+    builder: _identidadeVisual,
+  ),
 ];
 
 // ── Builders (funções top-level para permitir descriptors `const`) ──
@@ -134,3 +141,4 @@ Widget _aiKeys() => const AiKeysManagementTab();
 Widget _location() => const LocationDashboardScreen();
 Widget _backup() => const BackupManagementTab();
 Widget _legalProfile() => const LegalProfileTab();
+Widget _identidadeVisual() => const IdentidadeVisualTab();

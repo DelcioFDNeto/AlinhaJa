@@ -7,6 +7,7 @@ import 'mirotalk_stub.dart'
     if (dart.library.js_interop) 'mirotalk_web.dart'
     if (dart.library.io) 'mirotalk_mobile.dart';
 import 'package:alinha_ja/core/services/call_service.dart';
+import 'package:alinha_ja/core/constants.dart';
 
 class MiroTalkScreen extends StatefulWidget {
   final String roomId;
@@ -218,7 +219,7 @@ class _MiroTalkScreenState extends State<MiroTalkScreen> {
       return Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
-          title: const Text('Reunião AlinhaJá'),
+          title: const Text('Reunião ${AppConstants.appName}'),
           backgroundColor: Colors.black,
           foregroundColor: Colors.white,
           actions: [
@@ -241,7 +242,7 @@ class _MiroTalkScreenState extends State<MiroTalkScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  _roomUrl != null ? 'Videoconferência AlinhaJá' : 'Carregando...',
+                  _roomUrl != null ? 'Videoconferência ${AppConstants.appName}' : 'Carregando...',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,

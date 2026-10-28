@@ -159,8 +159,8 @@ class _UserManagementTabState extends ConsumerState<UserManagementTab> {
       builder: (ctx) => AlertDialog(
         title: Text('$action ${user.fullName}?'),
         content: Text(newStatus
-            ? 'O colaborador voltará a ter acesso ao AlinhaJá.'
-            : 'O acesso ao AlinhaJá será bloqueado imediatamente para este colaborador.'),
+            ? 'O colaborador voltará a ter acesso ao ${AppConstants.appName}.'
+            : 'O acesso ao ${AppConstants.appName} será bloqueado imediatamente para este colaborador.'),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx, false),

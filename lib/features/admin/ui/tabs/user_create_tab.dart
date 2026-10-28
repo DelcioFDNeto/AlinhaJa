@@ -156,7 +156,7 @@ class _UserCreateTabState extends ConsumerState<UserCreateTab> {
                 onPressed: () {
                   Clipboard.setData(ClipboardData(
                     text:
-                        'Acesso ao AlinhaJá:\n\nNome: $createdName\nE-mail: $createdEmail\nSenha Provisória: $createdPassword',
+                        'Acesso ao ${AppConstants.appName}:\n\nNome: $createdName\nE-mail: $createdEmail\nSenha Provisória: $createdPassword',
                   ));
                   ScaffoldMessenger.of(ctx).showSnackBar(
                     const SnackBar(

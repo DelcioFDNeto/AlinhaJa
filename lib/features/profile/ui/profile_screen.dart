@@ -14,6 +14,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:alinha_ja/features/chat/data/image_compress_stub.dart'
     if (dart.library.js_interop) 'package:alinha_ja/features/chat/data/image_compress_web.dart';
 import 'package:alinha_ja/core/ui/widgets/responsive_width_container.dart';
+import 'package:alinha_ja/core/brand/org_identity.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -285,7 +286,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         color: Colors.white, strokeWidth: 2))
                 : const Icon(Icons.save_rounded),
             label: Text(_isSaving ? 'Salvando...' : 'Salvar Perfil'),
-            backgroundColor: AppConstants.primary,
+            backgroundColor: context.corMarca,
             foregroundColor: Colors.white,
           ),
           body: ResponsiveWidthContainer(
@@ -771,7 +772,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Confirmar Saída'),
-        content: const Text('Deseja realmente sair da sua conta AlinhaJá?'),
+        content: const Text('Deseja realmente sair da sua conta ${AppConstants.appName}?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),

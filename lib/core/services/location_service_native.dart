@@ -9,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:alinha_ja/core/constants.dart';
 
 /// Callback de nível superior para o TaskHandler do foreground service.
 @pragma('vm:entry-point')
@@ -60,7 +61,7 @@ class LocationTaskHandler extends TaskHandler {
 
       if (_isIdle) {
         FlutterForegroundTask.updateService(
-          notificationTitle: 'AlinhaJá — Repouso Detectado',
+          notificationTitle: '${AppConstants.appName} — Repouso Detectado',
           notificationText: 'Economizando bateria. Aguardando movimento...',
         );
         return; // Cancela requisição de GPS e empurrão para a rede.
@@ -86,7 +87,7 @@ class LocationTaskHandler extends TaskHandler {
       FlutterForegroundTask.sendDataToMain(data);
 
       FlutterForegroundTask.updateService(
-        notificationTitle: 'AlinhaJá — Rastreamento ativo',
+        notificationTitle: '${AppConstants.appName} — Rastreamento ativo',
         notificationText:
             'Última atualização: ${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}',
       );
@@ -243,7 +244,7 @@ class LocationService {
       androidNotificationOptions: AndroidNotificationOptions(
         channelId: 'alinhaja_location_tracking',
         channelName: 'Rastreamento de Localização',
-        channelDescription: 'Rastreamento de localização ativo no AlinhaJá.',
+        channelDescription: 'Rastreamento de localização ativo no ${AppConstants.appName}.',
         onlyAlertOnce: true,
         channelImportance: NotificationChannelImportance.LOW,
         priority: NotificationPriority.LOW,
@@ -268,7 +269,7 @@ class LocationService {
 
     final result = await FlutterForegroundTask.startService(
       serviceId: 300,
-      notificationTitle: 'AlinhaJá — Rastreamento ativo',
+      notificationTitle: '${AppConstants.appName} — Rastreamento ativo',
       notificationText: 'Monitorando localização a cada $intervalMinutes min',
       notificationButtons: [
         const NotificationButton(id: 'btn_stop', text: 'Parar'),

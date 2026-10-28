@@ -97,7 +97,7 @@ class SettingsScreen extends ConsumerWidget {
                   style: TextStyle(fontWeight: FontWeight.w600)),
               subtitle: Text(
                 themeSettings.scheme == AppThemeScheme.alinha
-                    ? 'AlinhaJá (Padrão)'
+                    ? 'Cores da empresa (padrão)'
                     : 'WhatsApp',
                 style:
                     TextStyle(color: theme.colorScheme.outline, fontSize: 13),
@@ -109,7 +109,7 @@ class SettingsScreen extends ConsumerWidget {
                 items: const [
                   DropdownMenuItem(
                     value: AppThemeScheme.alinha,
-                    child: Text(AppConstants.appName),
+                    child: Text('Cores da empresa'),
                   ),
                   DropdownMenuItem(
                     value: AppThemeScheme.whatsapp,
@@ -327,7 +327,7 @@ class SettingsScreen extends ConsumerWidget {
               title: const Text('Central de Ajuda',
                   style: TextStyle(fontWeight: FontWeight.w600)),
               subtitle: Text(
-                'Perguntas frequentes e dúvidas sobre o AlinhaJá',
+                'Perguntas frequentes e dúvidas sobre o ${AppConstants.appName}',
                 style:
                     TextStyle(color: theme.colorScheme.outline, fontSize: 13),
               ),
@@ -348,7 +348,7 @@ class SettingsScreen extends ConsumerWidget {
               title: const Text('Versão do App',
                   style: TextStyle(fontWeight: FontWeight.w600)),
               subtitle: Text(
-                'AlinhaJá v${AppConstants.appVersion}',
+                '${AppConstants.appName} v${AppConstants.appVersion}',
                 style:
                     TextStyle(color: theme.colorScheme.outline, fontSize: 13),
               ),

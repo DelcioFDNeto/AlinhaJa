@@ -9,6 +9,7 @@ import '../../../core/globals.dart';
 import '../../../core/supabase_client.dart';
 import '../services/mfa_service.dart';
 import '../services/two_factor_service.dart';
+import 'package:alinha_ja/core/brand/org_identity.dart';
 
 /// Tela de segundo fator no login: o usuário já autenticou com senha
 /// (sessão em `aal1`) e precisa digitar o código TOTP do app autenticador
@@ -192,13 +193,13 @@ class _Verify2FAScreenState extends ConsumerState<Verify2FAScreen> {
                     width: 80,
                     height: 80,
                     decoration: BoxDecoration(
-                      color: AppConstants.primary.withValues(alpha: 0.15),
+                      color: context.corMarca.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(24),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.shield_rounded,
                       size: 40,
-                      color: AppConstants.primary,
+                      color: context.corMarca,
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -266,8 +267,8 @@ class _Verify2FAScreenState extends ConsumerState<Verify2FAScreen> {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(
-                                color: AppConstants.primary,
+                              borderSide: BorderSide(
+                                color: context.corMarca,
                                 width: 2,
                               ),
                             ),
@@ -317,10 +318,10 @@ class _Verify2FAScreenState extends ConsumerState<Verify2FAScreen> {
                     child: ElevatedButton(
                       onPressed: _isLoading ? null : _verifyCode,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppConstants.primary,
+                        backgroundColor: context.corMarca,
                         foregroundColor: Colors.white,
                         disabledBackgroundColor:
-                            AppConstants.primary.withValues(alpha: 0.4),
+                            context.corMarca.withValues(alpha: 0.4),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),

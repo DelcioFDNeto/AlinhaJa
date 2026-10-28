@@ -6,6 +6,7 @@ import 'package:alinha_ja/core/constants.dart';
 import 'package:alinha_ja/core/web_utils.dart';
 import 'package:alinha_ja/features/auth/providers/auth_provider.dart';
 import 'package:alinha_ja/features/platform/providers/platform_provider.dart';
+import 'package:alinha_ja/core/brand/org_identity.dart';
 
 /// Seletor de empresa em atuação — visível SOMENTE para o dono da plataforma,
 /// no app do tenant. Permite alternar o contexto de organização com o mesmo
@@ -37,7 +38,7 @@ class PlatformOrgSwitcher extends ConsumerWidget {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           child: Material(
-            color: AppConstants.primary.withValues(alpha: 0.08),
+            color: context.corMarca.withValues(alpha: 0.08),
             borderRadius: BorderRadius.circular(12),
             child: InkWell(
               borderRadius: BorderRadius.circular(12),
@@ -49,8 +50,8 @@ class PlatformOrgSwitcher extends ConsumerWidget {
                       ? MainAxisAlignment.start
                       : MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.apartment_rounded,
-                        size: 20, color: AppConstants.primary),
+                    Icon(Icons.apartment_rounded,
+                        size: 20, color: context.corMarca),
                     if (isExpanded) ...[
                       const SizedBox(width: 10),
                       Expanded(

@@ -8,6 +8,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../../../core/constants.dart';
 import '../../../core/globals.dart';
 import '../services/mfa_service.dart';
+import 'package:alinha_ja/core/brand/org_identity.dart';
 
 /// Tela de configuração (enrollment) do 2FA por app autenticador (TOTP).
 ///
@@ -293,7 +294,7 @@ class _MfaEnrollmentScreenState extends ConsumerState<MfaEnrollmentScreen> {
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide:
-                  const BorderSide(color: AppConstants.primary, width: 2),
+                  BorderSide(color: context.corMarca, width: 2),
             ),
           ),
           onSubmitted: (_) => _verify(),
@@ -328,7 +329,7 @@ class _MfaEnrollmentScreenState extends ConsumerState<MfaEnrollmentScreen> {
           child: ElevatedButton(
             onPressed: _isVerifying ? null : _verify,
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppConstants.primary,
+              backgroundColor: context.corMarca,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),

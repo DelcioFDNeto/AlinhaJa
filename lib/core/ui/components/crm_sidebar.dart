@@ -12,6 +12,7 @@ import 'package:alinha_ja/core/providers/desktop_selection_provider.dart';
 import 'package:alinha_ja/core/modules/module_descriptor.dart';
 import 'package:alinha_ja/core/modules/module_access_provider.dart';
 import 'package:alinha_ja/features/onboarding/onboarding_keys.dart';
+import 'package:alinha_ja/core/brand/logo_empresa.dart';
 
 /// Uma Sidebar CRM moderna e expansível.
 class CrmSidebar extends ConsumerStatefulWidget {
@@ -159,6 +160,9 @@ class CrmSidebarState extends ConsumerState<CrmSidebar> {
                   tooltip: _isExpanded ? 'Recolher Menu' : 'Expandir Menu',
                 ),
                 if (_isExpanded) ...[
+                  const SizedBox(width: 8),
+                  // Logo da empresa ao lado do nome do produto, quando houver.
+                  const LogoEmpresa(altura: 28, comLogoDoProduto: false),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(

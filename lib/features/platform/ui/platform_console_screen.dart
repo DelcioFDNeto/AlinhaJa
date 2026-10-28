@@ -9,6 +9,7 @@ import 'package:alinha_ja/core/modules/module_descriptor.dart';
 import 'package:alinha_ja/core/modules/module_registry.dart';
 import 'package:alinha_ja/features/auth/providers/auth_provider.dart';
 import 'package:alinha_ja/features/platform/providers/platform_provider.dart';
+import 'package:alinha_ja/core/brand/org_identity.dart';
 
 /// Console do Dono da Aplicação: gestão de empresas (tenants).
 ///
@@ -47,7 +48,7 @@ class PlatformConsoleScreen extends ConsumerWidget {
         ),
         icon: const Icon(Icons.add_business_outlined),
         label: const Text('Nova empresa'),
-        backgroundColor: AppConstants.primary,
+        backgroundColor: context.corMarca,
         foregroundColor: Colors.white,
       ),
       body: orgsAsync.when(
@@ -145,11 +146,11 @@ class _OrgCard extends ConsumerWidget {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: AppConstants.primary.withValues(alpha: 0.1),
+                color: context.corMarca.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.apartment_rounded,
-                  color: AppConstants.primary),
+              child: Icon(Icons.apartment_rounded,
+                  color: context.corMarca),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -362,7 +363,7 @@ class _OrgModulesDialogState extends ConsumerState<_OrgModulesDialog> {
                   SwitchListTile(
                     dense: true,
                     contentPadding: EdgeInsets.zero,
-                    secondary: Icon(m.icon, color: AppConstants.primary),
+                    secondary: Icon(m.icon, color: context.corMarca),
                     title: Text(m.title),
                     value: _selected.contains(m.id),
                     activeThumbColor: AppConstants.success,

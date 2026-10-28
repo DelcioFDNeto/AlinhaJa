@@ -7,6 +7,7 @@ import 'package:alinha_ja/core/rbac/models/rbac_permission.dart';
 import 'package:alinha_ja/core/rbac/providers/rbac_provider.dart';
 import 'package:alinha_ja/core/supabase_client.dart';
 import 'package:alinha_ja/features/auth/providers/auth_provider.dart';
+import 'package:alinha_ja/core/models/org_settings.dart';
 
 /// Conjunto de ids de módulos **licenciáveis** habilitados para a empresa
 /// (tenant) do usuário logado. Espelha `organizations.settings.modules`,
@@ -29,13 +30,8 @@ final enabledModuleIdsProvider = FutureProvider<Set<String>>((ref) async {
       .eq('id', orgId)
       .maybeSingle();
 
-  final settings = row?['settings'];
-  final modules = settings is Map ? settings['modules'] : null;
-  if (modules is List) {
-    return modules.map((e) => e.toString()).toSet();
-  }
   // Chave ausente/nula → nenhum módulo licenciável liberado (gate estrito).
-  return const <String>{};
+  return OrgSettings.fromJson(row?['settings']).modulos;
 });
 
 /// Regra de visibilidade de um módulo dado o RBAC e o entitlement do tenant.

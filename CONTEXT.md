@@ -6,7 +6,7 @@
 > citam "Fluxy" descrevem o projeto-base e foram mantidas de propósito. O nome
 > visível do app sai de `AppConstants.appName` (`lib/core/constants.dart`).
 
-> Documentação técnica completa. Última atualização: 28/10/2026 (Repositório próprio, limpeza de segurança e Fase 0 do plano de evolução — ver seção 34). Anterior: 08/09/2026 (Diretriz de Paridade com o Fluxy — NÃO portar migration 20260908150000 — ver seção 31). Anterior: 03/09/2026 (v1.3.8 — Auditoria Geral de Segurança, Hardening LGPD, SMTP e Correções de Enum/Auth — ver seção 30). Anterior: 21/08/2026 (v1.3.7 — ver seção 29). Anterior: 20/08/2026 (v1.3.6 — ver seção 28). Anterior: 29/07/2026 (Assistente IA — persona por conversa e blindagem de marca — ver seção 22).
+> Documentação técnica completa. Última atualização: 28/10/2026 (White-label: marca do produto na build e identidade visual por empresa — ver seção 35). Anterior: 28/10/2026 (Repositório próprio, limpeza de segurança e Fase 0 do plano de evolução — ver seção 34). Anterior: 08/09/2026 (Diretriz de Paridade com o Fluxy — NÃO portar migration 20260908150000 — ver seção 31). Anterior: 03/09/2026 (v1.3.8 — Auditoria Geral de Segurança, Hardening LGPD, SMTP e Correções de Enum/Auth — ver seção 30). Anterior: 21/08/2026 (v1.3.7 — ver seção 29). Anterior: 20/08/2026 (v1.3.6 — ver seção 28). Anterior: 29/07/2026 (Assistente IA — persona por conversa e blindagem de marca — ver seção 22).
 
 
 ---
@@ -2738,4 +2738,30 @@ Plano completo em `docs/PLANO-EVOLUCAO-ARQUITETURA.md`.
 - **E-mail independente de provedor:** `_shared/mailer.ts` com `SMTP_HOST/PORT/USER/PASSWORD/FROM_EMAIL`; `GMAIL_*` continua aceito. SMTP próprio da empresa (RH) tem prioridade, e um cadastrado incompleto não cai no servidor global.
 - **`rh-gerar-questoes`:** corrigido o `ReferenceError` (`corsHeaders` fora de escopo) que derrubava toda resposta desde 30/07/2026.
 - **CI** (`.github/workflows/ci.yml`): `flutter analyze` e `flutter test` com Flutter **3.41.9** (versão compatível com o `pubspec.lock`), `deno check` e `deno test` das Edge Functions, guarda de marca.
+
+---
+
+## 35. White-label: Marca do Produto e Identidade Visual por Empresa (28/10/2026)
+
+Fase 2 do `docs/PLANO-EVOLUCAO-ARQUITETURA.md`. Guia de uso para distribuidores e administradores: `docs/GUIA-MARCA-DISTRIBUIDOR.md`.
+
+### A) Marca do produto (build)
+- `AppConstants.appName = String.fromEnvironment('BRAND_NAME', defaultValue: 'AlinhaJá')` e `AppConstants.primary = Color(int.fromEnvironment('BRAND_PRIMARY_COLOR', defaultValue: 0xFFD21A18))`. Continuam `const`. O formato da cor é `0xFFRRGGBB`; outro formato cai no padrão sem aviso.
+- `AppConstants.nomeOriginalDoProduto`: nome com que os textos-fonte foram escritos. `legalDocumentTextProvider` troca esse nome por `appName` antes de aplicar o perfil legal.
+- `scripts/aplicar_marca.sh --nome --cor [--descricao]`: edita `web/index.html`, `web/manifest.json` e o `android:label`, e imprime o restante da lista.
+- `scripts/check_brand.sh` passou a ler o `defaultValue` da declaração de `appName` (as duas formas são aceitas; cópia idêntica no Fluxy).
+
+### B) Identidade da empresa (tempo de execução)
+- **Banco** (`20261028140000_identidade_visual_empresa.sql`): `organizations.cor_primaria/cor_secundaria` (`#RRGGBB`, CHECK), `fn_pode_editar_identidade()` (admin ativo, empresa em atuação), `get_org_identity()`, `admin_set_org_identity(p_logo_url, p_cor_primaria, p_cor_secundaria)` (estado completo; nulo volta ao padrão; audita `org.identity_changed`), bucket público `org-logos` (PNG/JPEG/WebP, 2 MB, escrita só em `{org_id}/`), permissão RBAC `admin_identidade` (Super Admin).
+- **App** (`lib/core/brand/`): `OrgIdentity` + `orgIdentityProvider` (nunca falha; sem sessão devolve `vazia`), `BrandTheme.claro/escuro` (sem cor da empresa, tema idêntico ao anterior; o esquema "WhatsApp" escolhido pelo usuário prevalece), `LogoEmpresa` (logo da empresa com reserva no logo do produto), `IdentidadeRepository` (upload, gravação, limpeza do logo antigo).
+- **Regra:** telas usam `context.corMarca` (primária do tema), nunca `AppConstants.primary`. Notificações do Android, sem `BuildContext`, usam `OrgIdentity.corAtual`. `test/identidade_visual_test.dart` falha se a constante ou o nome escrito direto voltarem à interface.
+- **Painel Administrativo → Identidade Visual** (`identidade_visual_tab.dart`): logo (convertido para WebP), cores por paleta ou hex, aviso de contraste WCAG (não bloqueia), prévia com o mesmo `BrandTheme`.
+
+### C) Contrato de `organizations.settings`
+- `20261028140100_contrato_settings_empresa.sql`: `fn_settings_erro(chave, valor)` e o trigger `trg_validar_settings` (BEFORE INSERT/UPDATE OF settings). Valida só as chaves que mudaram; chaves desconhecidas passam; `null` e `''` voltam ao padrão.
+- `lib/core/models/org_settings.dart`: leitura tipada (`modulos`, `provedorIa`, `gpsRetencaoDias`…). `test/org_settings_test.dart` compara as faixas com as da migration.
+
+### D) Pendências conhecidas
+- Redefinição de senha pelo app no celular: `redirectTo: 'alinhaja://update-password'` sem *intent filter* no `AndroidManifest.xml` — o link não abre o app.
+- Identificador do pacote Android por distribuição é manual (sem *flavors*).
 

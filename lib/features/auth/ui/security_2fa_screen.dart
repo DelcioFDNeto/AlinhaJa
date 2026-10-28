@@ -8,6 +8,7 @@ import '../../../core/constants.dart';
 import '../../../core/globals.dart';
 import '../services/mfa_service.dart';
 import '../services/two_factor_service.dart';
+import 'package:alinha_ja/core/brand/org_identity.dart';
 
 /// Tela de gerenciamento do 2FA (app autenticador / TOTP).
 ///
@@ -212,11 +213,11 @@ class _Security2FAScreenState extends ConsumerState<Security2FAScreen> {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: AppConstants.primary.withValues(alpha: 0.12),
+              color: context.corMarca.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.mark_email_read_rounded,
-                color: AppConstants.primary),
+            child: Icon(Icons.mark_email_read_rounded,
+                color: context.corMarca),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -252,7 +253,7 @@ class _Security2FAScreenState extends ConsumerState<Security2FAScreen> {
                 )
               : Switch(
                   value: _email2faEnabled,
-                  activeThumbColor: AppConstants.primary,
+                  activeThumbColor: context.corMarca,
                   onChanged: _toggleEmail2fa,
                 ),
         ],
@@ -277,11 +278,11 @@ class _Security2FAScreenState extends ConsumerState<Security2FAScreen> {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: AppConstants.primary.withValues(alpha: 0.12),
+                color: context.corMarca.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.devices_rounded,
-                  color: AppConstants.primary),
+              child: Icon(Icons.devices_rounded,
+                  color: context.corMarca),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -319,15 +320,15 @@ class _Security2FAScreenState extends ConsumerState<Security2FAScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppConstants.primary.withValues(alpha: 0.08),
+        color: context.corMarca.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppConstants.primary.withValues(alpha: 0.2)),
+        border: Border.all(color: context.corMarca.withValues(alpha: 0.2)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(Icons.info_outline_rounded,
-              size: 20, color: AppConstants.primary),
+          Icon(Icons.info_outline_rounded,
+              size: 20, color: context.corMarca),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -386,7 +387,7 @@ class _Security2FAScreenState extends ConsumerState<Security2FAScreen> {
               style: GoogleFonts.inter(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppConstants.primary,
+              backgroundColor: context.corMarca,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
@@ -452,11 +453,11 @@ class _Security2FAScreenState extends ConsumerState<Security2FAScreen> {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: AppConstants.primary.withValues(alpha: 0.12),
+              color: context.corMarca.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(Icons.smartphone_rounded,
-                color: AppConstants.primary),
+            child: Icon(Icons.smartphone_rounded,
+                color: context.corMarca),
           ),
           const SizedBox(width: 14),
           Expanded(

@@ -31,7 +31,14 @@ if [ ! -f "$CONSTANTS" ]; then
   exit 2
 fi
 
-OWN=$(sed -n "s/.*static const appName = '\([^']*\)'.*/\1/p" "$CONSTANTS" | head -1)
+# Aceita as duas formas da declaração: o literal direto
+#   static const appName = 'Marca';
+# e a marca configurável na build (white-label), cujo padrão é a deste repo:
+#   static const appName =
+#       String.fromEnvironment('BRAND_NAME', defaultValue: 'Marca');
+DECL=$(grep -A2 "static const appName" "$CONSTANTS" | tr '\n' ' ')
+OWN=$(printf '%s' "$DECL" | sed -n "s/.*defaultValue: '\([^']*\)'.*/\1/p")
+[ -z "$OWN" ] && OWN=$(printf '%s' "$DECL" | sed -n "s/.*static const appName = '\([^']*\)'.*/\1/p")
 if [ -z "$OWN" ]; then
   echo "check_brand: não consegui ler AppConstants.appName de $CONSTANTS" >&2
   exit 2

@@ -21,6 +21,7 @@ import 'package:alinha_ja/features/onboarding/onboarding_keys.dart';
 import 'package:alinha_ja/features/onboarding/onboarding_launcher.dart';
 import 'package:alinha_ja/features/onboarding/tour_replay_provider.dart';
 import 'package:alinha_ja/core/constants.dart';
+import 'package:alinha_ja/core/brand/logo_empresa.dart';
 
 /// Scaffold principal com BottomNavigationBar estilo WhatsApp.
 /// Usa IndexedStack para preservar o estado de cada aba.
@@ -462,11 +463,7 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset(
-              'assets/images/logo_header.png',
-              height: 32,
-              fit: BoxFit.contain,
-            ),
+            const LogoEmpresa(altura: 32),
             const SizedBox(width: 8),
             Text(
               AppConstants.appName,

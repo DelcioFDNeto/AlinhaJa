@@ -10,6 +10,7 @@ import '../../../core/constants.dart';
 import '../../../core/globals.dart';
 import '../../../core/supabase_client.dart';
 import '../providers/two_factor_provider.dart';
+import 'package:alinha_ja/core/brand/org_identity.dart';
 
 class VerifyEmail2FAScreen extends ConsumerStatefulWidget {
   const VerifyEmail2FAScreen({super.key});
@@ -306,13 +307,13 @@ class _VerifyEmail2FAScreenState extends ConsumerState<VerifyEmail2FAScreen> {
                     width: 80,
                     height: 80,
                     decoration: BoxDecoration(
-                      color: AppConstants.primary.withValues(alpha: 0.15),
+                      color: context.corMarca.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(24),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.shield_rounded,
                       size: 40,
-                      color: AppConstants.primary,
+                      color: context.corMarca,
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -388,8 +389,8 @@ class _VerifyEmail2FAScreenState extends ConsumerState<VerifyEmail2FAScreen> {
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(
-                                color: AppConstants.primary,
+                              borderSide: BorderSide(
+                                color: context.corMarca,
                                 width: 2,
                               ),
                             ),
@@ -471,10 +472,10 @@ class _VerifyEmail2FAScreenState extends ConsumerState<VerifyEmail2FAScreen> {
                       onPressed:
                           (_isLoading || _isBlocked) ? null : _verifyCode,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppConstants.primary,
+                        backgroundColor: context.corMarca,
                         foregroundColor: Colors.white,
                         disabledBackgroundColor:
-                            AppConstants.primary.withValues(alpha: 0.4),
+                            context.corMarca.withValues(alpha: 0.4),
                         disabledForegroundColor:
                             Colors.white.withValues(alpha: 0.6),
                         shape: RoundedRectangleBorder(
@@ -515,12 +516,12 @@ class _VerifyEmail2FAScreenState extends ConsumerState<VerifyEmail2FAScreen> {
                       ),
                       const SizedBox(width: 4),
                       _isResending
-                          ? const SizedBox(
+                          ? SizedBox(
                               width: 16,
                               height: 16,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                color: AppConstants.primary,
+                                color: context.corMarca,
                               ),
                             )
                           : TextButton(
@@ -535,7 +536,7 @@ class _VerifyEmail2FAScreenState extends ConsumerState<VerifyEmail2FAScreen> {
                                   fontWeight: FontWeight.w600,
                                   color: _resendCooldown > 0
                                       ? AppConstants.secondaryText
-                                      : AppConstants.primary,
+                                      : context.corMarca,
                                 ),
                               ),
                             ),

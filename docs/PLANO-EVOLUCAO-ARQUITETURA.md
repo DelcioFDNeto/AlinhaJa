@@ -123,17 +123,32 @@ Como o AlinhaJá pode ser distribuído ou vendido, o Fluxy não deve depender de
 3. **Branches antigas:** `Alinhaja` e `Alinhaja-dev` foram arquivadas no repositório do Fluxy como `backup/alinhaja-20261028` e `backup/alinhaja-dev-20261028` (mesmos commits). Falta apagar as originais.
 4. **Pendência da separação:** apontar implantação, CI e segredos do AlinhaJá para o repositório novo.
 
-### Fase 2 — White-label de verdade no AlinhaJá · M
+### Fase 2 — White-label de verdade no AlinhaJá · executada em 28/10/2026
 
-O AlinhaJá precisa trocar de identidade em dois níveis, ambos sem desenvolvimento:
+O AlinhaJá troca de identidade em dois níveis, sem desenvolvimento. Guia de uso: `docs/GUIA-MARCA-DISTRIBUIDOR.md`.
 
-- **Marca de distribuição** — para quem adquirir ou distribuir o produto: nome do app, ícone, domínios, nome nas lojas e nos e-mails. Resolvido com um **perfil de marca** (`BrandProfile`: nome do app, cores-base, ícones, domínios, identificador do pacote) escolhido na build por `--dart-define=BRAND=...` e por *flavors* do Android, e com `APP_NAME`, `APP_BASE_URL` e `LANDING_URL` por implantação, que as Edge Functions já leem dos Secrets.
-- **Identidade da empresa cliente** — dentro de uma distribuição, cada empresa com seu logo e suas cores:
+**Marca do produto (quem distribui ou adquire)**
+- Nome e cor-base definidos na build: `--dart-define=BRAND_NAME=...` e `BRAND_PRIMARY_COLOR=0xFFRRGGBB`.
+- `scripts/aplicar_marca.sh` troca título e manifesto do app Web e o nome do app no Android, e lista o restante (ícones, pacote, Firebase, Secrets).
+- O nome escrito direto na interface foi substituído pela constante da marca; nos documentos legais, o nome é trocado na exibição, sem alterar o texto aprovado.
 
-1. Campos de identidade em `organizations` (a coluna `logo_url` já existe; acrescentar cor primária e secundária).
-2. Tema montado em tempo de execução a partir da empresa do usuário, no lugar de `AppConstants.primary`.
-3. Substituir `Colors.*` por *tokens* do tema de forma gradual — o projeto já tem `AlinhaStatusTokens` como modelo —, priorizando as telas mais visíveis.
-4. Transformar `organizations.settings` em um contrato tipado (modelo Dart + validação no banco), editável no Console de Plataforma.
+**Identidade da empresa cliente (administrador, em tempo de execução)**
+- Banco (`20261028140000`): `cor_primaria` e `cor_secundaria` em `organizations` (`logo_url` já existia), `get_org_identity()`, `admin_set_org_identity()` com auditoria e bucket público `org-logos`, com escrita só pelo admin e na pasta da própria empresa.
+- App: o tema é montado a partir da cor da empresa (sem cor, o tema é idêntico ao anterior); logo da empresa no cabeçalho e no menu; os 52 usos da cor fixa da marca passaram a usar a cor do tema.
+- Painel Administrativo → **Identidade Visual**: logo, cores (paleta ou `#RRGGBB`), aviso de contraste e prévia com o mesmo tema do app.
+
+**Contrato de `organizations.settings`** (`20261028140100`)
+- Trigger que valida, em toda escrita, as chaves conhecidas com as mesmas faixas das funções de gravação. Só a chave que muda é validada: valores antigos fora da faixa não travam outras gravações.
+- Modelo Dart `OrgSettings` com leitura tipada; um teste compara as faixas do app com as do banco.
+
+**Validação:** migrations aplicadas duas vezes num PostgreSQL local, com os cenários de permissão (admin, membro, admin inativo, dono da plataforma atuando por outra empresa), validação de cores e endereço do logo, regras do bucket e contrato das configurações. No app: testes de modelo, tema, contrato e um teste de widget da aba com o fluxo completo; testes de regressão impedem a volta da cor fixa e do nome escrito direto na interface.
+
+**Fica para depois**
+- Identificador do pacote Android por distribuição continua manual: *flavors* mudariam o processo de build atual.
+- Cores de significado (`Colors.*` de erro, sucesso, categorias) permanecem: não são cor de marca.
+- E-mails transacionais usam o logo da marca do produto; o logo da empresa nos e-mails do RH é a próxima evolução.
+- As configurações por empresa continuam editadas nas telas de cada área (retenção, backup, IA), acessíveis ao dono da plataforma atuando pela empresa; uma tela única no Console de Plataforma é evolução.
+- **Defeito anterior encontrado:** a redefinição de senha pedida pelo app no celular redireciona para `alinhaja://update-password`, mas o Android não registra esse esquema — o link não abre o app. Requer *intent filter* no `AndroidManifest.xml` e o endereço na lista de redirecionamentos do Supabase.
 
 ### Fase 3 — Camada de dados entre telas e banco · G, contínua
 
@@ -173,6 +188,6 @@ O AlinhaJá precisa trocar de identidade em dois níveis, ambos sem desenvolvime
 | ------- | ------ | ------------ |
 | Dados pessoais fora do git | Armazenamento seguro para as planilhas de funcionários usadas nas importações | Definir antes da carga dos 187 usuários do DuBairro |
 | Vídeo em grupo | Servidor MiroTalk próprio ou padronizar no Agora | Avaliar custo do Agora para reuniões; sem isso, servidor próprio |
-| Ordem das próximas fases | 2 → 4 → 3 → 5 (sugerida) | Fase 2 primeiro: é o que torna o AlinhaJá vendável como white-label sem desenvolvimento por cliente |
+| Ordem das próximas fases | 4 → 3 → 5 (sugerida) | Fase 4 primeiro: migration de base e descoberta de servidor no celular simplificam cada nova implantação |
 
 *AlinhaJá — Plano de Evolução da Arquitetura. Documento interno da equipe técnica.*
